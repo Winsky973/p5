@@ -5,7 +5,6 @@ const productRoutes = require('./routes/product');
 
 const app = express();
 
-
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -15,13 +14,6 @@ app.use((req, res, next) => {
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.static('images'));
-
-
-app.get('/', function(req, res) {
-    app.use('/public', express.static(path.join(__dirname, '..', '../front')));
-    res.sendFile(path.join(__dirname, '..', 'front/', 'html/index.html'));
-    console.log(__dirname + '..' + '/front/' + 'html/index.html');
-});
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
