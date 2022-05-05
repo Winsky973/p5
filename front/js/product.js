@@ -19,12 +19,18 @@ fetch("http://localhost:3000/api/products/" + newUrl).then(function(res) {
 
 .then(function(value) {
     let products = value;
+    console.log(products);
+    /**
+     * Nom du produit
+     */
+    document.getElementsByTagName('title')[0].textContent = products.name;
 
     /**
      * affichage de l'image
      */
     let image = document.createElement('img');
     image.setAttribute("src", products.imageUrl);
+    image.setAttribute("alt", products.altTxt);
     let item_img = document.querySelector("article > div.item__img");
     item_img.appendChild(image);
 
@@ -50,4 +56,56 @@ fetch("http://localhost:3000/api/products/" + newUrl).then(function(res) {
         colors.appendChild(option).textContent = product;
     }
 
+    let addToCart = document.getElementById('addToCart');
+
+    addToCart.addEventListener('click', function(e) {
+        if (storageAvailable('localStorage')) {
+
+            let choice = document.getElementById('colors');
+            let colorChoice = choice.value;
+
+            let quantity = document.getElementById('quantity').value;
+
+            /**Push des items dans le local storage en format JSON */
+            localStorage.setItem('objetKanape',
+                JSON.stringify({
+                    'name': products.name,
+                    'price': products.price,
+                    'color': colorChoice,
+                    'quantity': quantity,
+                    'id': newUrl,
+                    'imageUrl': products.imageUrl,
+                    'altTxt': products.altTxt,
+                }));
+
+        } else {
+            console.log('err');
+        }
+    });
+
 });
+
+
+
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    } catch (e) {
+        return e instanceof DOMException && (
+                // everything except Firefox
+                e.code === 22 ||
+                // Firefox
+                e.code === 1014 ||
+                // test name field too, because code might not be present
+                // everything except Firefox
+                e.name === 'QuotaExceededError' ||
+                // Firefox
+                e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}
