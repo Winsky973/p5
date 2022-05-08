@@ -19,7 +19,7 @@ fetch("http://localhost:3000/api/products/" + newUrl).then(function(res) {
 
 .then(function(value) {
     let products = value;
-    console.log(products);
+    //console.log(products);
     /**
      * Nom du produit
      */
@@ -58,6 +58,7 @@ fetch("http://localhost:3000/api/products/" + newUrl).then(function(res) {
 
     let addToCart = document.getElementById('addToCart');
 
+
     addToCart.addEventListener('click', function(e) {
         if (storageAvailable('localStorage')) {
 
@@ -66,24 +67,58 @@ fetch("http://localhost:3000/api/products/" + newUrl).then(function(res) {
 
             let quantity = document.getElementById('quantity').value;
 
-            /**Push des items dans le local storage en format JSON */
-            localStorage.setItem('objetKanape',
-                JSON.stringify({
-                    'name': products.name,
-                    'price': products.price,
-                    'color': colorChoice,
-                    'quantity': quantity,
-                    'id': newUrl,
-                    'imageUrl': products.imageUrl,
-                    'altTxt': products.altTxt,
-                }));
+            /**Push des items dans le local storage en format JSON 
+             * 
+             * Si l'objet n'est pas dans le  local storage on push originalCart
+             * Si il existe on le prend et push items a la fin
+             */
+            let items = {
+                "name": products.name,
+                "price": products.price,
+                "color": colorChoice,
+                "quantity": quantity,
+                "id": newUrl,
+                "imageUrl": products.imageUrl,
+                "altTxt": products.altTxt,
+            };
+            let originalCart = {
+                    items: [{
+                        "name": products.name,
+                        "price": products.price,
+                        "color": colorChoice,
+                        "quantity": quantity,
+                        "id": newUrl,
+                        "imageUrl": products.imageUrl,
+                        "altTxt": products.altTxt,
+                    }]
+                }
+                //itemsStorage.push(originalCart);
 
+            let cardItems = JSON.parse(localStorage.getItem("objetKanape"));
+            console.log(cardItems);
+
+            if (cardItems !== null) {
+                cardItems.items.push(items);
+                console.log(cardItems);
+                localStorage.setItem('objetKanape', JSON.stringify(cardItems));
+            } else {
+                localStorage.setItem('objetKanape', JSON.stringify(originalCart));
+            }
         } else {
             console.log('err');
         }
     });
 
 });
+
+
+function getLocalStorage(key) {
+
+}
+
+function updateLocalStarage(key, value) {
+
+}
 
 
 

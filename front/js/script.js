@@ -7,8 +7,7 @@ fetch("http://localhost:3000/api/products/").then(function(res) {
 .then(function(value) {
     let produts = value;
     for (product of produts) {
-        //console.log(product);
-
+        console.log(produts);
         let items = document.getElementById('items');
 
         /**

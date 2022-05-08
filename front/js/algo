@@ -1,0 +1,4 @@
+1. prendre les données rentrer par l'utilisateur
+2. transformer le tout en format JSON
+3. envoyer le tout a l'api 
+4. récuperer le numero renvoyer par l'api
