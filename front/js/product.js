@@ -112,15 +112,6 @@ fetch("http://localhost:3000/api/products/" + newUrl).then(function(res) {
 });
 
 
-function getLocalStorage(key) {
-
-}
-
-function updateLocalStarage(key, value) {
-
-}
-
-
 
 function storageAvailable(type) {
     try {

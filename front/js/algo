@@ -2,3 +2,13 @@
 2. transformer le tout en format JSON
 3. envoyer le tout a l'api 
 4. récuperer le numero renvoyer par l'api
+
+
+algo suppression
+
+Fonction updateElement(element : string){
+    element = ecouter le changement de l'evennement
+    Si il y'a changement
+}
+
+fonction removeElement()
