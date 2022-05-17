@@ -1,0 +1,35 @@
+-- lib.js
+-- -- Ajouter sur toutes les pages HTML en premier (avant l'autre JS)
+-- -- Y regrouper tes classes / functions
+-- -- Implémenter une fonction getParamUrl(string paramName = ''): string {}
+-- -- Implémenter une fonction getCart()
+-- -- -- storageAvailable à faire dans le getCart() du coup
+-- itemsClass > HtmlTag
+-- -- constructor()
+-- -- create(tag, attr, addClass, textContent)
+-- -- remove(element)
+-- script.js
+-- -- Renommer : produts > products
+-- -- Sortir de la boucle cette ligne : let items = document.getElementById('items');
+-- -- Reprendre pour utiliser new HtmlTag() #refactoring
+-- product.js
+-- -- location -> window.location.href
+-- -- Reprendre pour utiliser new HtmlTag() #refactoring
+-- -- Attention, utiliser product et pas products
+-- -- Attention à ta boucle for (color of product.colors) {
+-- -- Ajout au panier
+-- -- -- Vérifier que l'utilisateur a choisi une couleur : alert('message error explicite sinon')
+-- -- -- Vérifier que l'utilisateur a choisi une quantité : alert('message error explicite sinon')
+-- -- -- objetKanape à remplacer par 'cart'
+-- -- -- Tu n'as pas besoin de la clef "items" dans ton objetKanape
+-- -- -- Attention : pas de doublon dans le panier
+-- -- -- Ce qui identifie un produit : _id + color
+-- -- -- Localstorage : ne stocker id + qty + color
+-- cart.js
+-- -- // Détecter le submit du formulaire
+-- -- -- Intercepter l'envoi du formulaire (event.preventDefault())
+-- -- -- Ensuite, tu vas tester chacun des champs (notEmpty, isEmail)
+-- -- -- Si tous les tests sont bon, alors tu envoies le formulaire
+-- -- -- Pour debug : return;
+-- Finaliser les pages cart / confirmation
+-- Commencer à avancer sur le tableau de tests

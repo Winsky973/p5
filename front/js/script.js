@@ -5,10 +5,11 @@ fetch("http://localhost:3000/api/products/").then(function(res) {
 })
 
 .then(function(value) {
-    let produts = value;
-    for (product of produts) {
-        console.log(produts);
-        let items = document.getElementById('items');
+
+    let products = value;
+    let items = document.getElementById('items');
+    for (product of products) {
+        console.log(products);
 
         /**
          * Création de la balise a

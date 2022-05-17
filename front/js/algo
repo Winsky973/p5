@@ -12,3 +12,17 @@ Fonction updateElement(element : string){
 }
 
 fonction removeElement()
+
+
+la requete d'envoie a l'api devrait etre de
+
+{ contact : {firstname : winsky, lastname : thadal ...} 'products' : [id1, id2...] }
+
+
+[
+    8906dfda133f4c20a9d0e34f18adcf06: {color: "", quantity: "", id: ""}
+
+]
+   
+
+
