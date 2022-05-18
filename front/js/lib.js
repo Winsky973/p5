@@ -39,18 +39,10 @@ class HtmlTag {
     remove(element) {}
 }
 
-
 /**
- * Déclarations des fonctions
- */
-
-/**
- * 
  * LOCAL STORAGE
  * 
- * 
  */
-
 
 /**
  * cette fonction test si le local storage est pris en charge par le navigateur
@@ -110,6 +102,27 @@ function setCart(key, value) {
 
 
 
+
+/**
+ * Cette fonction va changer la quantité de produits dans le local storage
+ * @param {Array} cardItems 
+ * @param {Object} items 
+ * @param {string} id 
+ * @param {string} colorChoice 
+ * @param {string} quantity 
+ */
+function updateLocalStorage(cardItems, items, id, colorChoice, quantity) {
+    let found = cardItems.findIndex(element => element.id === id && element.color === colorChoice);
+
+    if (found !== -1) {
+        cardItems[found].quantity = parseInt(cardItems[found].quantity) + parseInt(quantity);
+    } else {
+        cardItems.push(items);
+    }
+}
+
+
+
 /**
  * cette fonction prend l'url, cherche et renvoie le parametre demandé 
  * @param {string} param le parametre a rechercher
@@ -120,8 +133,6 @@ function getParamUrl(param) {
     let id = url.searchParams.get(param);
     return id;
 }
-
-
 
 
 

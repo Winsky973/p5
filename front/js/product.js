@@ -14,7 +14,6 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
 })
 
 
-
 .then(function(value) {
     let products = value;
     /** Nom du produit 'title de la page'*/
@@ -64,37 +63,17 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
         //console.log('color : ', colorChoice);
 
 
-        let cart = new Object();
-
-        cart["8906dfda133f4c20a9d0e34f18adcf06"] = {
-            "color": colorChoice,
-            "quantity": quantity,
-            "id": id,
-        };
-
-        cart["8906dfda133f4c20a9d0e34f18adcf0"] = {
-            "color": colorChoice,
-            "quantity": quantity,
-            "id": id,
-        };
-
-        let cartArray = [];
-        cartArray.push(cart);
-        console.log(cartArray);
-
         let items = {
             "color": colorChoice,
             "quantity": quantity,
             "id": id,
         };
 
-        let originalCart = {
-            items: [{
-                "color": colorChoice,
-                "quantity": quantity,
-                "id": id,
-            }]
-        };
+        let originalCart = [{
+            "color": colorChoice,
+            "quantity": quantity,
+            "id": id,
+        }];
 
 
         /*cardItems = getCart("cart");
@@ -109,9 +88,10 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
 
             console.log(cardItems);
 
-
             if (cardItems !== null) {
-                cardItems.items.push(items);
+
+                updateLocalStorage(cardItems, items, id, colorChoice, quantity);
+
                 setCart('cart', cardItems);
             } else {
                 setCart('cart', originalCart);

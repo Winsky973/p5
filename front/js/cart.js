@@ -9,6 +9,8 @@
 let cart__order__form = document.querySelectorAll('form.cart__order__form > div > input');
 console.log(cart__order__form);
 
+let qunt = document.querySelector("div.cart__item__content__settings__quantity > input[name='itemQuantity']");
+console.log(qunt);
 
 
 let total = 0,
@@ -26,7 +28,7 @@ let productsId = [];
  */
 
 if (carts !== null) {
-    for (const cart of carts.items) {
+    for (const cart of carts) {
         fetch("http://localhost:3000/api/products/" + cart.id).then(function(res) {
                 if (res.ok) {
                     return res.json();
@@ -34,8 +36,8 @@ if (carts !== null) {
             })
             .then(function(value) {
                 let product = value;
-                //console.log(products);
-                /**Stockagedes id dans un tableau */
+
+                /**Stockage des id dans un tableau */
                 productsId.push(cart.id);
 
                 let cart__items = document.getElementById('cart__items');
@@ -70,7 +72,7 @@ if (carts !== null) {
                 divItemDescription.appendChild(newH2);
 
                 /**Balise p color */
-                let newPColor = element.create('p', {}, '', product.color);
+                let newPColor = element.create('p', {}, '', cart.color);
                 divItemDescription.appendChild(newPColor);
 
                 /**Balise p prix */
@@ -102,38 +104,41 @@ if (carts !== null) {
                 /**
                  * Supprimer un item
                  */
-                let articleTest = document.querySelector('article.cart__item');
-                let dataId = articleTest.dataset.id;
-                let dataColor = articleTest.dataset.color;
-                let deleteItem = document.querySelector("div.cart__item__content__settings__delete > p");
-                let nodeParent = deleteItem.parentNode.closest('article');
+                //let articleTest = document.querySelectorAll('article.cart__item');
+                let deleteItem = document.querySelectorAll("div.cart__item__content__settings__delete > p");
 
-                //console.log(nodeParent);
+                let cardItems = getCart('cart');
+                //console.log('cardItems : ', cardItems);
 
+                let nodeParent = '';
+                /** Le noeud principal */
+                deleteItem.forEach(element => {
+                    element.addEventListener('click', (e) => {
+                        e.stopPropagation;
+                        nodeParent = findParentNodeId(element);
+                        //console.log('nodeParent : ', nodeParent);
 
-                deleteItem.addEventListener('click', function(e) {
-                    nodeParent.remove();
+                        deleteFromLocalStorage(cardItems, nodeParent);
+                        console.log('cardItems : ', cardItems);
+                    })
                 });
-
 
                 /**
                  * Calcule du prix total 
                  * Calcule du nombre d'articles dans le panier
                  */
-
-
-                if (product.quantity > 1) {
-                    total = (total + (product.price * product.quantity));
+                if (cart.quantity > 1) {
+                    total = (total + (product.price * cart.quantity));
                 } else {
                     total += product.price;
                 }
 
-                totalQuantity = totalQuantity + parseInt(product.quantity);
+                totalQuantity = totalQuantity + parseInt(cart.quantity);
+                document.getElementById('totalQuantity').textContent = totalQuantity;
+                document.getElementById('totalPrice').textContent = total;
             })
-    }
 
-    document.getElementById('totalQuantity').textContent = totalQuantity;
-    document.getElementById('totalPrice').textContent = total;
+    }
 
 
 } else {
@@ -141,15 +146,49 @@ if (carts !== null) {
 }
 
 
-let articleNode = document.querySelectorAll("section#cart__items > article");
+function deleteFromLocalStorage(cardItems, id) {
+    let found = cardItems.findIndex(element => element.id === id /*&& element.color === colorChoice*/ );
+    console.log('found : ', found);
 
-console.log(articleNode);
+    if (found !== -1) {
+        cardItems.splice(found, 1);
+        setCart('cart', cardItems);
+        window.location.reload();
+    }
+}
+
+
+
+function findIdLocalStorage(cardItems, id) {
+    let found = cardItems.findIndex(element => element.id === id /*&& element.color === colorChoice*/ );
+    return found;
+}
+
+
+function findParentNodeId(parent) {
+    let nodeParent = {};
+    nodeParent = parent.parentElement.closest(':not(div)').getAttribute('data-id');
+    return nodeParent;
+}
+
+
+
+/*function findParentNode(parents) {
+    let nodeParent = {};
+
+    for (const parent of parents) {
+        nodeParent = parent.parentNode.closest(':not(div)');
+    }
+    return nodeParent;
+}*/
+
+
+
 
 
 
 
 /** Envoie de la commande et récupération des informations de l'API*/
-
 
 async function sendCommand() {
     await getUserinformations()
@@ -180,7 +219,7 @@ async function sendCommand() {
 
                     alert('valeur : ' + value);
 
-                    location.href = `confirmation.html?id=${value.orderId}&firstName=${value.contact.firstName}&lastName=${value.contact.lastName}&address=${value.contact.adress}&city=${value.contact.city}&email=${value.contact.email}`;
+                    location.href = `confirmation.html?id=${value.orderId}`;
                 })
                 .catch(function(err) {
                     alert('error fetch : ' + err);
