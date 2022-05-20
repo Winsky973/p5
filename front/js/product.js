@@ -2,6 +2,7 @@
  * Captation de l'url
  */
 let id = getParamUrl('id');
+let element = new HtmlTag();
 
 
 /**
@@ -15,15 +16,15 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
 
 
 .then(function(value) {
+    let item_img = document.querySelector("article > div.item__img");
+    let addToCart = document.getElementById('addToCart');
     let products = value;
+
     /** Nom du produit 'title de la page'*/
     document.getElementsByTagName('title')[0].textContent = products.name;
 
     /** affichage de l'image*/
-    let image = document.createElement('img');
-    image.setAttribute("src", products.imageUrl);
-    image.setAttribute("alt", products.altTxt);
-    let item_img = document.querySelector("article > div.item__img");
+    let image = element.create('img', { src: products.imageUrl, alt: products.altTxt }, '', '');
     item_img.appendChild(image);
 
     /** Affichage du prix*/
@@ -38,16 +39,13 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
     /** Insertion des couleurs en option */
     for (color of products.colors) {
         let colors = document.getElementById('colors');
-        let option = document.createElement('option');
-        option.setAttribute("value", color);
-        colors.appendChild(option).textContent = color;
+        let option = element.create('option', { value: color }, '', color);
+        colors.appendChild(option);
     }
 
-    let addToCart = document.getElementById('addToCart');
 
 
     addToCart.addEventListener('click', function(e) {
-
 
         let choice = document.getElementById('colors');
         let colorChoice = choice.value;
@@ -58,10 +56,6 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
          * Si l'objet n'est pas dans le  local storage on push originalCart
          * Si il existe on le prend et push items a la fin
          */
-
-        //console.log('quant : ', quantity);
-        //console.log('color : ', colorChoice);
-
 
         let items = {
             "color": colorChoice,
@@ -75,11 +69,6 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
             "id": id,
         }];
 
-
-        /*cardItems = getCart("cart");
-        for (const cardItem of cardItems.items) {
-            console.log(cardItem.id);
-        }*/
 
 
         if (parseInt(quantity) === 0) { alert(`choisissez un nombre d'article`); }

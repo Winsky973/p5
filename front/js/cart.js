@@ -22,7 +22,6 @@ let total = 0,
 let carts = getCart('cart');
 let productsId = [];
 
-
 /**
  * Boucle for of pour recuperer les id et envoyer au backend 
  */
@@ -45,9 +44,7 @@ if (carts !== null) {
                 let element = new HtmlTag();
 
                 /**Creation de la balise <article> */
-                let article = element.create('article', '', 'cart__item', '');
-                article.setAttribute("data-id", cart.id);
-                article.setAttribute("data-color", cart.color);
+                let article = element.create('article', { "data-id": cart.id, "data-color": cart.color }, 'cart__item', '');
                 cart__items.appendChild(article);
 
                 /**Creation de la balise <div> */
@@ -107,21 +104,23 @@ if (carts !== null) {
                 //let articleTest = document.querySelectorAll('article.cart__item');
                 let deleteItem = document.querySelectorAll("div.cart__item__content__settings__delete > p");
 
-                let cardItems = getCart('cart');
-                //console.log('cardItems : ', cardItems);
+                let quantityChange = document.querySelectorAll("div.cart__item__content__settings__quantity > input");;
 
-                let nodeParent = '';
-                /** Le noeud principal */
-                deleteItem.forEach(element => {
-                    element.addEventListener('click', (e) => {
+
+                quantityChange.forEach(element => {
+
+                    element.addEventListener('change', (e) => {
                         e.stopPropagation;
-                        nodeParent = findParentNodeId(element);
-                        //console.log('nodeParent : ', nodeParent);
-
-                        deleteFromLocalStorage(cardItems, nodeParent);
-                        console.log('cardItems : ', cardItems);
+                        let newquant = e.target.value;
+                        let nodeParentId = findParentNodeId(element);
+                        let found = findIdLocalStorage(carts, nodeParentId)
+                        let newCarts = carts;
+                        updateQuantity(carts, found, newquant);
                     })
                 });
+
+                //supression d'un élément
+                element.remove(deleteItem);
 
                 /**
                  * Calcule du prix total 
@@ -137,7 +136,6 @@ if (carts !== null) {
                 document.getElementById('totalQuantity').textContent = totalQuantity;
                 document.getElementById('totalPrice').textContent = total;
             })
-
     }
 
 
@@ -145,88 +143,29 @@ if (carts !== null) {
     alert(`vous n'avez choisis aucun produit`);
 }
 
-
-function deleteFromLocalStorage(cardItems, id) {
-    let found = cardItems.findIndex(element => element.id === id /*&& element.color === colorChoice*/ );
-    console.log('found : ', found);
-
-    if (found !== -1) {
-        cardItems.splice(found, 1);
-        setCart('cart', cardItems);
-        window.location.reload();
-    }
-}
-
-
-
-function findIdLocalStorage(cardItems, id) {
-    let found = cardItems.findIndex(element => element.id === id /*&& element.color === colorChoice*/ );
-    return found;
-}
-
-
-function findParentNodeId(parent) {
-    let nodeParent = {};
-    nodeParent = parent.parentElement.closest(':not(div)').getAttribute('data-id');
-    return nodeParent;
-}
-
-
-
-/*function findParentNode(parents) {
-    let nodeParent = {};
-
-    for (const parent of parents) {
-        nodeParent = parent.parentNode.closest(':not(div)');
-    }
-    return nodeParent;
-}*/
-
-
-
-
-
-
-
 /** Envoie de la commande et récupération des informations de l'API*/
+let order = document.getElementById('order');
+getUserinformation(cart__order__form)
+    .then(function(res) {
+        if (res) {
+            return res;
+        }
+    })
+    .then(function(value) {
+        console.log('value : ', value);
+    })
 
-async function sendCommand() {
-    await getUserinformations()
-        .then(function(data) {
 
-            alert(JSON.stringify({ contact: data, products: productsId }));
 
-            fetch("http://localhost:3000/api/products/order", {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ contact: data, products: productsId })
-                })
-                .then(function(res) {
-                    if (res.ok) {
-                        console.log('res : ', res);
-                        return res.json();
-                    }
-                })
-                .then(function(value) {
-                    console.log('valeur : ', value.contact);
-                    for (product_api of value.products) {
-                        console.log('product_api : ', product_api);
-                    }
-                    console.log('productsID : ', value.orderId);
+order.addEventListener('click', (e) => {
+    e.preventDefault;
+    //console.log(getUserinformations());
+    //sendCommand(); 
+});
 
-                    alert('valeur : ' + value);
 
-                    location.href = `confirmation.html?id=${value.orderId}`;
-                })
-                .catch(function(err) {
-                    alert('error fetch : ' + err);
-                })
-
-        })
-        .catch(function(err) {
-            alert('error send' + err);
-        })
+function deleteLocalstorage(cardItems, key) {
+    if (cardItems === null) {
+        localStorage.removeItem(key);
+    }
 }

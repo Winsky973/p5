@@ -36,8 +36,84 @@ class HtmlTag {
         return element;
     }
 
-    remove(element) {}
+    remove(tag) {
+        let nodeParent = '';
+        tag.forEach(element => {
+            element.addEventListener('click', (e) => {
+                e.stopPropagation;
+                nodeParent = findParentNodeId(element);
+                deleteFromLocalStorage(carts, nodeParent);
+                this.update();
+            })
+        });
+    }
+
+    update() {
+        window.location.reload();
+    }
 }
+
+
+
+/**
+ * cette fonction va send la commande a l'API et construire l'url qui sera envoyé a la page de confirmation
+ */
+async function sendCommand() {
+    await getUserinformations()
+        .then(function(data) {
+
+            fetch("http://localhost:3000/api/products/order", {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ contact: data, products: productsId })
+                })
+                .then(function(res) {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                })
+                .then(function(value) {
+                    location.href = `confirmation.html?id=${value.orderId}`;
+                })
+                .catch(function(err) {
+                    alert('error fetch : ' + err);
+                })
+        })
+        .catch(function(err) {
+            alert('error send' + err);
+        })
+}
+
+
+
+/**
+ * cette fonction prend l'url, cherche et renvoie le parametre demandé 
+ * @param {string} param le parametre a rechercher
+ * @returns string du parametre trouver dans l'url
+ */
+function getParamUrl(param) {
+    let url = new URL(window.location.href);
+    let id = url.searchParams.get(param);
+    return id;
+}
+
+/**
+ * Cette fonction retourne va trouver le noeud parent de l'enfant et retourne data-id de la balise article
+ * @param {string} child tag html
+ * @returns 
+ */
+function findParentNodeId(child) {
+    let nodeParent = {};
+    nodeParent = child.parentElement.closest(':not(div)').getAttribute('data-id');
+    return nodeParent;
+}
+
+
+
+
 
 /**
  * LOCAL STORAGE
@@ -72,8 +148,6 @@ function storageAvailable(type) {
     }
 }
 
-
-
 /**
  * Cette fonction prend le contenu du local storage
  * @param {string} key la clef 
@@ -90,7 +164,6 @@ function getCart(key) {
     }
 }
 
-
 /**
  * cette fonction va push les informations dans le local storage
  * @param {string} key clef local storage
@@ -99,9 +172,6 @@ function getCart(key) {
 function setCart(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 }
-
-
-
 
 /**
  * Cette fonction va changer la quantité de produits dans le local storage
@@ -114,25 +184,57 @@ function setCart(key, value) {
 function updateLocalStorage(cardItems, items, id, colorChoice, quantity) {
     let found = cardItems.findIndex(element => element.id === id && element.color === colorChoice);
 
+    //updateQuantity(cardItems, found, quantity, items);
     if (found !== -1) {
         cardItems[found].quantity = parseInt(cardItems[found].quantity) + parseInt(quantity);
+        console.log('cardItems[found].quantity : ', cardItems[found].quantity);
     } else {
         cardItems.push(items);
+    }
+
+}
+/**
+ * Cette fonction va modifier la quantité de produits dans le local storage
+ * @param {int} found l'index de l'element dans le tableau prit dans le localstorage
+ * @param {string} quantity la quantité de produit
+ * @param {Array} items object d'items a push dans le LStorage 
+ */
+function updateQuantity(cardItems, found, quantity) {
+    console.log('updateQuantity cardItems : ', cardItems);
+    console.log('cardItems[found].quantity : ', cardItems[found].quantity);
+    cardItems[found].quantity = parseInt(quantity);
+    setCart('cart', cardItems);
+}
+
+/**
+ * Cette fonction va chercher l'id du produit dans le local storage
+ * plutard on pourra surcharger la fonction updateLocalStorage() qui fera tout ca
+ * @param {Array} cardItems 
+ * @param {string} id 
+ * @returns 
+ */
+function findIdLocalStorage(cardItems, id) {
+    let found = cardItems.findIndex(element => element.id === id);
+    return found;
+}
+
+/**
+ * Trouve et supprime un élément du tableau et push le nouveau tableau dans le localstorage
+ * @param {Array} cardItems 
+ * @param {String} id 
+ */
+function deleteFromLocalStorage(cardItems, id) {
+    let found = findIdLocalStorage(cardItems, id);
+    if (found !== -1) {
+        cardItems.splice(found, 1);
+        setCart('cart', cardItems);
     }
 }
 
 
 
-/**
- * cette fonction prend l'url, cherche et renvoie le parametre demandé 
- * @param {string} param le parametre a rechercher
- * @returns string du parametre trouver dans l'url
- */
-function getParamUrl(param) {
-    let url = new URL(window.location.href);
-    let id = url.searchParams.get(param);
-    return id;
-}
+
+
 
 
 
@@ -146,6 +248,33 @@ function getParamUrl(param) {
  */
 
 
+/*async function getUserinformation(params) {
+    let contact = {};
+
+    await params.forEach(element => {
+        element.addEventListener('change', (e) => {
+            e.stopPropagation;
+            contact = e.target.value;
+
+            console.log(contact);
+            return this.contact;
+        })
+
+    });
+}*/
+
+
+
+function isEmpty(params) {
+    if (params === "") {
+        return false;
+    }
+}
+
+function errorMsg(id, content) {
+    let error = document.getElementById(id);
+    error.textContent = "Vous avez oublié le : " + content;
+}
 
 
 async function getUserinformations() {
@@ -191,6 +320,9 @@ async function getUserinformations() {
 
     return contact;
 }
+
+
+
 
 
 /**
