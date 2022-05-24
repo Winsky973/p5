@@ -9,7 +9,7 @@ class HtmlTag {
     constructor() {}
 
     /**
-     * Cette fontion sert a la construction d'un élément HTML 
+     * Cette fontion sert a la construction d'un élément HTML complet
      * @param {string} tag sera le tag de l'élément HTML (div, h1, nav...)
      * @param {object} attr les attributs à ajouter
      * @param {string} addClass La/les classes a ajouter 
@@ -36,18 +36,28 @@ class HtmlTag {
         return element;
     }
 
+    /**
+     * Cette fonction va supprimer produit du local Storage
+     * Il recois @param {tag} tag qui est un élément html
+     * Il trouve l'element l'id du produit dans l'élement parent, supprime le produit du local storage
+     * et refresh la page 
+     * @param {string} tag element p supprimer
+     */
     remove(tag) {
-        let nodeParent = '';
+        let id = '';
         tag.forEach(element => {
             element.addEventListener('click', (e) => {
                 e.stopPropagation;
-                nodeParent = findParentNodeId(element);
-                deleteFromLocalStorage(carts, nodeParent);
-                //this.update();
+                id = findParentNodeId(element);
+                deleteFromLocalStorage(carts, id);
+                this.update();
             })
         });
     }
 
+    /**
+     * Cette fonction va rafraichir la page
+     */
     update() {
         window.location.reload();
     }
@@ -56,7 +66,7 @@ class HtmlTag {
 
 
 /**
- * cette fonction prend l'url, cherche et renvoie le parametre demandé 
+ * cette fonction prend l'URL, cherche et renvoie le parametre demandé dans l'URL 
  * @param {string} param le parametre a rechercher
  * @returns string du parametre trouver dans l'url
  */
@@ -67,7 +77,8 @@ function getParamUrl(param) {
 }
 
 /**
- * Cette fonction retourne va trouver le noeud parent de l'enfant et retourne data-id de la balise article
+ * Cette fonction va chercher le noeud parent de l'enfant
+ * si il le trouve, retourne le contenu de data-id de la balise article
  * @param {string} child tag html
  * @returns 
  */
@@ -115,9 +126,9 @@ function storageAvailable(type) {
 }
 
 /**
- * Cette fonction prend le contenu du local storage
+ * Cette fonction prend le contenu du local storage et le renvoie
  * @param {string} key la clef 
- * @returns 
+ * @returns Object
  */
 function getCart(key) {
     if (key === null) { return false }
@@ -153,12 +164,13 @@ function updateLocalStorage(cardItems, items, id, colorChoice, quantity) {
     //updateQuantity(cardItems, found, quantity, items);
     if (found !== -1) {
         cardItems[found].quantity = parseInt(cardItems[found].quantity) + parseInt(quantity);
-        console.log('cardItems[found].quantity : ', cardItems[found].quantity);
+        //console.log('cardItems[found].quantity : ', cardItems[found].quantity);
     } else {
         cardItems.push(items);
     }
 
 }
+
 /**
  * Cette fonction va modifier la quantité de produits dans le local storage
  * @param {int} found l'index de l'element dans le tableau prit dans le localstorage
@@ -185,7 +197,7 @@ function findIdLocalStorage(cardItems, id) {
 }
 
 /**
- * Trouve et supprime un élément du tableau et push le nouveau tableau dans le localstorage
+ * Trouve, supprime un élément du tableau et push le nouveau tableau dans le localstorage
  * @param {Array} cardItems 
  * @param {String} id 
  */
@@ -210,23 +222,6 @@ function deleteFromLocalStorage(cardItems, id) {
  * 
  */
 
-
-/*async function getUserinformation(params) {
-
-    let contact = {};
-    console.log(params);
-    await params.forEach(element => {
-        element.addEventListener('change', function(e) {
-            e.preventde
-            contact = e.target;
-            //console.log(e.currentTarget.name);
-            console.log(e.currentTarget);
-            //console.log(contact);
-            //return this.contact;
-        })
-
-    });
-}*/
 
 
 /**
@@ -253,9 +248,9 @@ async function sendCommand() {
         .catch(function(err) {
             alert('error fetch : ' + err);
         })
-
-
 }
+
+
 
 
 
@@ -292,6 +287,10 @@ function getUserinformations() {
 
     if (isEmpty(firstName)) {
         errorMsg('firstNameErrorMsg', `le prénom n'a pas été renseigné`);
+    }
+    if (!isEmpty(firstName) && !validateName(firstName)) {
+        errorMsg('firstNameErrorMsg', `le prénom est incorrect`);
+
     } else { errorMsg('firstNameErrorMsg', ``); }
 
     if (isEmpty(lastName)) {
@@ -328,7 +327,12 @@ function getUserinformations() {
     return contact;
 }
 
-
+/**
+ * Cette fonction vérifie si la chaine recu est au bon format mail  
+ *
+ * @param {string} inputValue chaine de caractère
+ * @returns bool (true ou false) 
+ */
 function isMail(inputValue) {
     ///^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputValue.value)) {
@@ -339,16 +343,19 @@ function isMail(inputValue) {
 }
 
 
-
-function validateName(firstName) {
+/**
+ * Cette fonction verifie si il n ya pas e caractère autre que A-Z dans la chaine
+ * @param {string} value nom ou prenom
+ * @returns bool (true ou false) 
+ */
+function validateName(value) {
 
     const regex = /^[A-Za-z]*\s{1}[A-Za-z]*$/;
 
-    if (firstName.length === 0) {
-        console.log('nom incorrect');
+    if (value.length === 0) {
+        console.log('chaine vide');
     }
-    if (!firstName.match(regex)) {
-        errorMsg('firstNameErrorMsg', 'erreur dans le prénom');
+    if (!value.match(regex)) {
         return false;
     } else {
         return true;

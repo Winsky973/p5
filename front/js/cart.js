@@ -105,18 +105,17 @@ if (carts !== null) {
                 //let articleTest = document.querySelectorAll('article.cart__item');
                 let deleteItem = document.querySelectorAll("div.cart__item__content__settings__delete > p");
 
-                let quantityChange = document.querySelectorAll("div.cart__item__content__settings__quantity > input");;
+                let changeQuantity = document.querySelectorAll("div.cart__item__content__settings__quantity > input");;
 
 
-                quantityChange.forEach(element => {
-
+                changeQuantity.forEach(element => {
                     element.addEventListener('change', (e) => {
                         e.stopPropagation;
-                        let newquant = e.target.value;
+                        let newQuantity = e.target.value;
                         let nodeParentId = findParentNodeId(element);
                         let found = findIdLocalStorage(carts, nodeParentId)
                         let newCarts = carts;
-                        updateQuantity(carts, found, newquant);
+                        updateQuantity(carts, found, newQuantity);
                     })
                 });
 
