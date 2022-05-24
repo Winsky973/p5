@@ -43,7 +43,7 @@ class HtmlTag {
                 e.stopPropagation;
                 nodeParent = findParentNodeId(element);
                 deleteFromLocalStorage(carts, nodeParent);
-                this.update();
+                //this.update();
             })
         });
     }
@@ -51,40 +51,6 @@ class HtmlTag {
     update() {
         window.location.reload();
     }
-}
-
-
-
-/**
- * cette fonction va send la commande a l'API et construire l'url qui sera envoyé a la page de confirmation
- */
-async function sendCommand() {
-    await getUserinformations()
-        .then(function(data) {
-
-            fetch("http://localhost:3000/api/products/order", {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ contact: data, products: productsId })
-                })
-                .then(function(res) {
-                    if (res.ok) {
-                        return res.json();
-                    }
-                })
-                .then(function(value) {
-                    location.href = `confirmation.html?id=${value.orderId}`;
-                })
-                .catch(function(err) {
-                    alert('error fetch : ' + err);
-                })
-        })
-        .catch(function(err) {
-            alert('error send' + err);
-        })
 }
 
 
@@ -235,9 +201,6 @@ function deleteFromLocalStorage(cardItems, id) {
 
 
 
-
-
-
 /**
  * 
  * 
@@ -249,80 +212,58 @@ function deleteFromLocalStorage(cardItems, id) {
 
 
 /*async function getUserinformation(params) {
+
     let contact = {};
-
+    console.log(params);
     await params.forEach(element => {
-        element.addEventListener('change', (e) => {
-            e.stopPropagation;
-            contact = e.target.value;
-
-            console.log(contact);
-            return this.contact;
+        element.addEventListener('change', function(e) {
+            e.preventde
+            contact = e.target;
+            //console.log(e.currentTarget.name);
+            console.log(e.currentTarget);
+            //console.log(contact);
+            //return this.contact;
         })
 
     });
 }*/
 
 
+/**
+ * cette fonction va send la commande a l'API et construire l'url qui sera envoyé a la page de confirmation
+ */
+async function sendCommand() {
+    let contact = await getUserinformations();
+    fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ contact: contact, products: productsId })
+        })
+        .then(function(res) {
+            if (res.ok) {
+                return res.json();
+            }
+        })
+        .then(function(value) {
+            location.href = `confirmation.html?id=${value.orderId}`;
+        })
+        .catch(function(err) {
+            alert('error fetch : ' + err);
+        })
 
-function isEmpty(params) {
-    if (params === "") {
-        return false;
-    }
-}
 
-function errorMsg(id, content) {
-    let error = document.getElementById(id);
-    error.textContent = "Vous avez oublié le : " + content;
-}
-
-
-async function getUserinformations() {
-    let contact = {};
-
-    let firstName = document.getElementById('firstName').value;
-    let lastName = document.getElementById('lastName').value;
-    let address = document.getElementById('address').value;
-    let city = document.getElementById('city').value;
-    let email = document.getElementById('email').value;
-
-    /*if (firstName.length < 4) {
-        errorMsg('firstNameErrorMsg', 'Entrez un prénom correct');
-        return false;
-    }
-
-    if (lastName.length < 4) {
-        errorMsg('lastNameErrorMsg', 'Entrez un nom correct');
-        return false;
-    }
-
-    if (city.length < 4) {
-        errorMsg('cityErrorMsg', 'Entrez une adresse correct');
-        return false;
-    }
-
-    if (email.length < 4) {
-        errorMsg('lastNameErrorMsg', 'Entrez une ville correct');
-        return false;
-    }
-
-    if (address.length < 4) {
-        errorMsg('lastNameErrorMsg', 'Entrez une ville correct');
-        return false;
-    }*/
-    contact = {
-        'firstName': firstName,
-        'lastName': lastName,
-        'address': address,
-        'city': city,
-        'email': email
-    };
-
-    return contact;
 }
 
 
 
+
+
+function isEmpty(value) {
+    if (value.length === 0 || value === "" || typeof value === 'undefined') { return true; } else { return false }
+}
 
 
 /**
@@ -335,6 +276,69 @@ function errorMsg(id, message) {
     tag.textContent = message;
     tag.className = 'cart__order__form__question p';
 }
+
+
+
+
+function getUserinformations() {
+    let contact = {};
+
+    let firstName = document.getElementById('firstName').value;
+    let lastName = document.getElementById('lastName').value;
+    let address = document.getElementById('address').value;
+    let city = document.getElementById('city').value;
+    let email = document.getElementById('email');
+
+
+    if (isEmpty(firstName)) {
+        errorMsg('firstNameErrorMsg', `le prénom n'a pas été renseigné`);
+    } else { errorMsg('firstNameErrorMsg', ``); }
+
+    if (isEmpty(lastName)) {
+        errorMsg('lastNameErrorMsg', `le nom n'a pas été renseigné`);
+    } else { errorMsg('lastNameErrorMsg', ``); }
+
+    if (isEmpty(address)) {
+        errorMsg('addressErrorMsg', `l'addresse n'a pas été renseigné`);
+    } else { errorMsg('addressErrorMsg', ``); }
+
+    if (isEmpty(city)) {
+        errorMsg('cityErrorMsg', `la ville n'a pas été renseigné`);
+    } else { errorMsg('cityErrorMsg', ``); }
+
+    if (isEmpty(email.value)) {
+        errorMsg('emailErrorMsg', `l'émail n'a pas été renseigné`);
+    }
+    if (!isEmpty(email.value) && !isMail(email)) {
+        errorMsg('emailErrorMsg', ``);
+        alert('pas mail')
+        errorMsg('emailErrorMsg', `Entrez une mail valide`);
+    } else {
+        contact = {
+            'firstName': firstName,
+            'lastName': lastName,
+            'address': address,
+            'city': city,
+            'email': email
+        };
+
+    }
+
+    console.log(contact);
+    return contact;
+}
+
+
+function isMail(inputValue) {
+    ///^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputValue.value)) {
+        return (true)
+    }
+    alert("You have entered an invalid email address!")
+    return (false)
+}
+
+
 
 function validateName(firstName) {
 

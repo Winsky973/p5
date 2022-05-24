@@ -6,11 +6,12 @@
 
 
 /**traitement des informations utilisateur */
-let cart__order__form = document.querySelectorAll('form.cart__order__form > div > input');
-console.log(cart__order__form);
+//let cart__order__form = document.querySelectorAll('form.cart__order__form > div > input');
+let cart__order__form = document.querySelectorAll('form.cart__order__form');
+
+//console.log('cart__order__form : ', cart__order__form);
 
 let qunt = document.querySelector("div.cart__item__content__settings__quantity > input[name='itemQuantity']");
-console.log(qunt);
 
 
 let total = 0,
@@ -144,24 +145,24 @@ if (carts !== null) {
 }
 
 /** Envoie de la commande et récupération des informations de l'API*/
+
 let order = document.getElementById('order');
-getUserinformation(cart__order__form)
-    .then(function(res) {
-        if (res) {
-            return res;
-        }
-    })
-    .then(function(value) {
-        console.log('value : ', value);
-    })
 
+order.addEventListener("click", function(event) {
+    event.preventDefault();
+    const shouldChangePage = confirm(
+        "Voulez-vous valider votre commande"
+    );
 
-
-order.addEventListener('click', (e) => {
-    e.preventDefault;
-    //console.log(getUserinformations());
-    //sendCommand(); 
+    if (shouldChangePage) {
+        sendCommand();
+    }
+    console.log("click");
 });
+
+
+
+
 
 
 function deleteLocalstorage(cardItems, key) {
