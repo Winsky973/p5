@@ -18,18 +18,18 @@ class HtmlTag {
      */
     create(tag, attr, addClass, textContent) {
         let element = document.createElement(tag);
-        if (attr !== 'undefined') {
+        if (attr !== "undefined") {
             for (const key in attr) {
                 element.setAttribute(key, attr[key]);
             }
         }
 
-        if (addClass !== '') {
+        if (addClass !== "") {
             element.classList.add(addClass);
         }
 
-        if (textContent === '') {
-            element.textContent = '';
+        if (textContent === "") {
+            element.textContent = "";
         } else {
             element.textContent = textContent;
         }
@@ -47,9 +47,9 @@ class HtmlTag {
  * @param {string} tag element p supprimer
  */
 function remove(tag) {
-    let id = '';
+    let id = "";
     tag.forEach(element => {
-        element.addEventListener('click', (e) => {
+        element.addEventListener("click", (e) => {
             e.stopPropagation;
             id = findParentNodeId(element);
 
@@ -90,15 +90,14 @@ function getParamUrl(param) {
  */
 function findParentNodeId(child) {
     if (child === null) { return false }
-    let nodeParent = '',
-        id = '',
-        color = '',
-        sku = '';
-    console.log('child : ', typeof child);
+    let nodeParent = "",
+        id = "",
+        color = "",
+        sku = "";
 
-    nodeParent = child.parentElement.closest(':not(div)');
-    id = nodeParent.getAttribute('data-id');
-    color = nodeParent.getAttribute('data-color');
+    nodeParent = child.parentElement.closest(":not(div)");
+    id = nodeParent.getAttribute("data-id");
+    color = nodeParent.getAttribute("data-color");
     sku = id + color;
 
     return sku;
@@ -115,12 +114,12 @@ function findParentNodeId(child) {
 /**
  * cette fonction test si le local storage est pris en charge par le navigateur
  * @param {string} type localstorage
- * @returns 
+ * @return 
  */
 function storageAvailable(type) {
     try {
         var storage = window[type],
-            x = '__storage_test__';
+            x = "__storage_test__";
         storage.setItem(x, x);
         storage.removeItem(x);
         return true;
@@ -145,11 +144,11 @@ function storageAvailable(type) {
  * @return Object cart, sinon un message erreur
  */
 function getCart() {
-    if (storageAvailable('localStorage')) {
+    if (storageAvailable("localStorage")) {
         let cart = JSON.parse(localStorage.getItem("cart"));
         return cart;
     } else {
-        console.log('err local storage');
+        console.log("err local storage");
     }
 }
 
@@ -211,7 +210,7 @@ function findIndexProductFromCart(sku) {
 
 /**
  * Trouve, supprime un élément du tableau et push le nouveau tableau dans le localstorage
- * @param {String} id 
+ * @param {String} id
  */
 function removeProductFromCart(id) {
     let cart = getCart();

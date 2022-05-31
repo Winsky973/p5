@@ -4,11 +4,11 @@
  * 
  */
 
-let firstName = document.getElementById('firstName');
-let lastName = document.getElementById('lastName');
-let address = document.getElementById('address');
-let city = document.getElementById('city');
-let email = document.getElementById('email');
+let firstName = document.getElementById("firstName");
+let lastName = document.getElementById("lastName");
+let address = document.getElementById("address");
+let city = document.getElementById("city");
+let email = document.getElementById("email");
 
 
 /**
@@ -20,8 +20,8 @@ async function prepareOrder() {
     fetch("http://localhost:3000/api/products/order", {
             method: "POST",
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                "Accept": "application/json",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({ contact: contact, products: productIds })
         })
@@ -34,7 +34,7 @@ async function prepareOrder() {
             location.href = `confirmation.html?id=${value.orderId}`;
         })
         .catch(function(err) {
-            alert('error fetch : ' + err);
+            alert("error fetch : " + err);
         })
 }
 
@@ -44,7 +44,10 @@ async function prepareOrder() {
  * @returns 
  */
 function isEmpty(value) {
-    if (value.length === 0 || value === "" || typeof value === 'undefined') { return true; } else { return false }
+    if (value.length === 0 ||
+        value === "" ||
+        typeof value === 'undefined'
+    ) { return true; } else { return false }
 }
 
 
@@ -55,60 +58,60 @@ function isEmpty(value) {
 function getUserinformations() {
     let contact = {};
 
-    firstName.addEventListener('change', function(event) {
+    firstName.addEventListener("change", function(event) {
 
         if (validateName(firstName.value)) {
-            console.log('ok pour le nom');
+            console.log("ok pour le nom");
         } else {
-            errorMsg(firstNameErrorMsg, 'Rentrez un prénom correct');
+            errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
         }
     });
 
-    lastName.addEventListener('change', function(event) {
+    lastName.addEventListener("change", function(event) {
 
         if (validateName(lastName.value)) {
-            console.log('ok pour le nom');
+            console.log("ok pour le nom");
         } else {
-            errorMsg(lastNameErrorMsg, 'Rentrez un prénom correct');
+            errorMsg(lastNameErrorMsg, "Rentrez un prénom correct");
 
         }
     });
 
-    address.addEventListener('change', function(event) {
+    address.addEventListener("change", function(event) {
         if (validateAdress(address.value)) {
-            console.log('ok pour l adress');
+            console.log("ok pour l adress");
 
         } else {
-            errorMsg(addressErrorMsg, 'Rentrez une adresse correct');
+            errorMsg(addressErrorMsg, "Rentrez une adresse correct");
         }
     });
 
-    city.addEventListener('change', function(event) {
+    city.addEventListener("change", function(event) {
         if (validateName(city.value)) {
-            console.log('ok pour la ville');
+            console.log("ok pour la ville");
 
         } else {
-            errorMsg(cityErrorMsg, 'Rentrez une ville correct');
+            errorMsg(cityErrorMsg, "Rentrez une ville correct");
         }
     });
 
-    email.addEventListener('input', function(event) {
+    email.addEventListener("change", function(event) {
         if (isMail(email.value)) {
-            console.log('ok pour le mail');
+            console.log("ok pour le mail");
 
         } else {
-            errorMsg(emailErrorMsg, 'Rentrez un mail correct');
+            errorMsg(emailErrorMsg, "Rentrez un mail correct");
             event.addEventLisener();
 
         }
     });
 
     contact = {
-        'firstName': firstName.value,
-        'lastName': lastName.value,
-        'address': address.value,
-        'city': city.value,
-        'email': email.value,
+        "firstName": firstName.value,
+        "lastName": lastName.value,
+        "address": address.value,
+        "city": city.value,
+        "email": email.value,
     };
 
     console.log(contact);
@@ -123,7 +126,7 @@ function getUserinformations() {
  * @param {string} message le message à afficher 
  */
 function errorMsg(tag, message) {
-    tag.className = 'cart__order__form__question p';
+    tag.className = "cart__order__form__question p";
     tag.textContent = message;
 }
 
@@ -154,7 +157,7 @@ function validateName(value) {
     const regex = /^[a-zA-Z]+$/;
 
     if (value.length === 0) {
-        console.log('chaine vide');
+        console.log("chaine vide");
     }
 
     let test = value.match(regex) ? true : false;
@@ -168,7 +171,11 @@ function validateName(value) {
 
 
 function valideInformationsUser() {
-    if (validateName(contact.firstName) && validateName(contact.lastName) && validateAdress(contact.address) && validateName(contact.city) && isMail(contact.email)) {
+    if (validateName(contact.firstName) &&
+        validateName(contact.lastName) &&
+        validateAdress(contact.address) &&
+        validateName(contact.city) &&
+        isMail(contact.email)) {
         return true;
     } else {
         return false;
@@ -185,7 +192,7 @@ function validateAdress(value) {
     const regex = /^[0-9][\sa-zA-Z]+$/;
 
     if (value.length === 0) {
-        console.log('chaine vide');
+        console.log("chaine vide");
     }
 
     let test = value.match(regex) ? true : false;

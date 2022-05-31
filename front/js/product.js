@@ -1,7 +1,7 @@
 /**
  * Captation de l'url
  */
-let id = getParamUrl('id');
+let id = getParamUrl("id");
 let element = new HtmlTag();
 
 
@@ -17,40 +17,40 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
 
 .then(function(value) {
     let item_img = document.querySelector("article > div.item__img");
-    let addToCart = document.getElementById('addToCart');
+    let addToCart = document.getElementById("addToCart");
     let products = value;
 
     /** Nom du produit 'title de la page'*/
-    document.getElementsByTagName('title')[0].textContent = products.name;
+    document.getElementsByTagName("title")[0].textContent = products.name;
 
     /** affichage de l'image*/
-    let image = element.create('img', { src: products.imageUrl, alt: products.altTxt }, '', '');
+    let image = element.create("img", { src: products.imageUrl, alt: products.altTxt }, "", "");
     item_img.appendChild(image);
 
     /** Affichage du prix*/
-    let prix = document.getElementById('price');
-    prix.textContent = products.price + ' ';
+    let prix = document.getElementById("price");
+    prix.textContent = products.price + " ";
 
     /**nom du produit */
-    document.getElementById('title').textContent = products.name;
+    document.getElementById("title").textContent = products.name;
 
     /**Affichage de la description */
-    document.getElementById('description').textContent = products.description;
+    document.getElementById("description").textContent = products.description;
     /** Insertion des couleurs en option */
     for (color of products.colors) {
-        let colors = document.getElementById('colors');
-        let option = element.create('option', { value: color }, '', color);
+        let colors = document.getElementById("colors");
+        let option = element.create("option", { value: color }, "", color);
         colors.appendChild(option);
     }
 
 
 
 
-    addToCart.addEventListener('click', function(e) {
+    addToCart.addEventListener("click", function(e) {
 
-        let choice = document.getElementById('colors');
+        let choice = document.getElementById("colors");
         let colorChoice = choice.value;
-        let quantity = document.getElementById('quantity').value;
+        let quantity = document.getElementById("quantity").value;
         let sku = id + colorChoice;
 
         /**
