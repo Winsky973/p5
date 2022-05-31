@@ -35,33 +35,38 @@ class HtmlTag {
         }
         return element;
     }
-
-    /**
-     * Cette fonction va supprimer produit du local Storage
-     * Il recois @param {tag} tag qui est un élément html
-     * Il trouve l'element l'id du produit dans l'élement parent, supprime le produit du local storage
-     * et refresh la page 
-     * @param {string} tag element p supprimer
-     */
-    remove(tag) {
-        let id = '';
-        tag.forEach(element => {
-            element.addEventListener('click', (e) => {
-                e.stopPropagation;
-                id = findParentNodeId(element);
-                deleteFromLocalStorage(carts, id);
-                this.update();
-            })
-        });
-    }
-
-    /**
-     * Cette fonction va rafraichir la page
-     */
-    update() {
-        window.location.reload();
-    }
 }
+
+
+
+/**
+ * Cette fonction va supprimer produit du local Storage
+ * Il recois @param {tag} tag qui est un élément html
+ * Il trouve l'element l'id du produit dans l'élement parent, supprime le produit du local storage
+ * et refresh la page 
+ * @param {string} tag element p supprimer
+ */
+function remove(tag) {
+    let id = '';
+    tag.forEach(element => {
+        element.addEventListener('click', (e) => {
+            e.stopPropagation;
+            id = findParentNodeId(element);
+
+            removeProductFromCart(id);
+            deleteCartFromLocalStorage();
+            reloadpage();
+        })
+    });
+}
+
+/**
+ * Cette fonction va rafraichir la page
+ */
+function reloadpage() {
+    window.location.reload();
+}
+
 
 
 
@@ -83,11 +88,18 @@ function getParamUrl(param) {
  * @returns 
  */
 function findParentNodeId(child) {
-    let nodeParent = {};
-    nodeParent = child.parentElement.closest(':not(div)').getAttribute('data-id');
-    return nodeParent;
-}
+    let nodeParent = '',
+        id = '',
+        color = '',
+        sku = '';
 
+    nodeParent = child.parentElement.closest(':not(div)');
+    id = nodeParent.getAttribute('data-id');
+    color = nodeParent.getAttribute('data-color');
+    sku = id + color;
+
+    return sku;
+}
 
 
 
@@ -128,13 +140,11 @@ function storageAvailable(type) {
 /**
  * Cette fonction prend le contenu du local storage et le renvoie
  * @param {string} key la clef 
- * @returns Object
+ * @returns Object sinon un message
  */
-function getCart(key) {
-    if (key === null) { return false }
-
+function getCart() {
     if (storageAvailable('localStorage')) {
-        let cardItems = JSON.parse(localStorage.getItem(key));
+        let cardItems = JSON.parse(localStorage.getItem("cart"));
         return cardItems;
     } else {
         console.log('err local storage');
@@ -143,221 +153,82 @@ function getCart(key) {
 
 /**
  * cette fonction va push les informations dans le local storage
- * @param {string} key clef local storage
  * @param {Array/object} value tableau / objet d'items
  */
-function setCart(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+function setCart(value) {
+    localStorage.setItem("cart", JSON.stringify(value));
 }
 
 /**
  * Cette fonction va changer la quantité de produits dans le local storage
- * @param {Array} cardItems 
- * @param {Object} items 
  * @param {string} id 
  * @param {string} colorChoice 
- * @param {string} quantity 
+ * @param {int} quantity 
  */
-function updateLocalStorage(cardItems, items, id, colorChoice, quantity) {
-    let found = cardItems.findIndex(element => element.id === id && element.color === colorChoice);
-
-    //updateQuantity(cardItems, found, quantity, items);
+function addProductToCart(id, colorChoice, quantity) {
+    let cart = getCart();
+    let newCart = cart;
+    let found = newCart.findIndex(element => element.id === id && element.color === colorChoice);
     if (found !== -1) {
-        cardItems[found].quantity = parseInt(cardItems[found].quantity) + parseInt(quantity);
-        //console.log('cardItems[found].quantity : ', cardItems[found].quantity);
+        newCart[found].quantity = parseInt(newCart[found].quantity) + quantity;
+        return newCart;
     } else {
-        cardItems.push(items);
+        return false;
     }
 
 }
 
 /**
  * Cette fonction va modifier la quantité de produits dans le local storage
- * @param {int} found l'index de l'element dans le tableau prit dans le localstorage
+ * @param {id} id id de l'élément parent concatener avec la couleur (SKU) du bouton Supprimer
  * @param {string} quantity la quantité de produit
- * @param {Array} items object d'items a push dans le LStorage 
  */
-function updateQuantity(cardItems, found, quantity) {
-    console.log('updateQuantity cardItems : ', cardItems);
-    console.log('cardItems[found].quantity : ', cardItems[found].quantity);
-    cardItems[found].quantity = parseInt(quantity);
-    setCart('cart', cardItems);
+function updateProductCartQuantity(id, quantity) {
+    let cart = getCart();
+    let found = findIndexProductFromCart(id);
+    console.log('found : ', found);
+
+    /*console.log('id : ', id);
+    console.log('quantity : ', quantity);*/
+    cart[found].quantity = parseInt(quantity);
+    setCart(cart);
 }
 
 /**
  * Cette fonction va chercher l'id du produit dans le local storage
  * plutard on pourra surcharger la fonction updateLocalStorage() qui fera tout ca
- * @param {Array} cardItems 
- * @param {string} id 
- * @returns 
+ * @param {string} sku 
+ * @returns found un booléen true si le sku est trouvé et false dans le cas contaire
  */
-function findIdLocalStorage(cardItems, id) {
-    let found = cardItems.findIndex(element => element.id === id);
+function findIndexProductFromCart(sku) {
+    let cart = getCart();
+
+    let found = cart.findIndex(element => element.sku === sku);
     return found;
 }
 
 /**
  * Trouve, supprime un élément du tableau et push le nouveau tableau dans le localstorage
- * @param {Array} cardItems 
  * @param {String} id 
  */
-function deleteFromLocalStorage(cardItems, id) {
-    let found = findIdLocalStorage(cardItems, id);
+function removeProductFromCart(id) {
+    let cart = getCart();
+    let found = findIndexProductFromCart(id);
     if (found !== -1) {
-        cardItems.splice(found, 1);
-        setCart('cart', cardItems);
+        cart.splice(found, 1);
+        setCart(cart);
     }
-}
-
-
-
-
-
-/**
- * 
- * 
- * Gestion de la parti de récuperation des entrées utilisateur dans la partie commande des produits
- * 
- * 
- * 
- */
-
-
-
-/**
- * cette fonction va send la commande a l'API et construire l'url qui sera envoyé a la page de confirmation
- */
-async function sendCommand() {
-    let contact = await getUserinformations();
-    fetch("http://localhost:3000/api/products/order", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ contact: contact, products: productsId })
-        })
-        .then(function(res) {
-            if (res.ok) {
-                return res.json();
-            }
-        })
-        .then(function(value) {
-            location.href = `confirmation.html?id=${value.orderId}`;
-        })
-        .catch(function(err) {
-            alert('error fetch : ' + err);
-        })
-}
-
-
-
-
-
-
-
-function isEmpty(value) {
-    if (value.length === 0 || value === "" || typeof value === 'undefined') { return true; } else { return false }
-}
-
-
-/**
- * Cette fonction affiche un message en cas d'erreur
- * @param {string} id l'id du tag HTML
- * @param {string} message le message a afficher 
- */
-function errorMsg(id, message) {
-    let tag = document.getElementById(id);
-    tag.textContent = message;
-    tag.className = 'cart__order__form__question p';
-}
-
-
-
-
-function getUserinformations() {
-    let contact = {};
-
-    let firstName = document.getElementById('firstName').value;
-    let lastName = document.getElementById('lastName').value;
-    let address = document.getElementById('address').value;
-    let city = document.getElementById('city').value;
-    let email = document.getElementById('email');
-
-
-    if (isEmpty(firstName)) {
-        errorMsg('firstNameErrorMsg', `le prénom n'a pas été renseigné`);
-    }
-    if (!isEmpty(firstName) && !validateName(firstName)) {
-        errorMsg('firstNameErrorMsg', `le prénom est incorrect`);
-
-    } else { errorMsg('firstNameErrorMsg', ``); }
-
-    if (isEmpty(lastName)) {
-        errorMsg('lastNameErrorMsg', `le nom n'a pas été renseigné`);
-    } else { errorMsg('lastNameErrorMsg', ``); }
-
-    if (isEmpty(address)) {
-        errorMsg('addressErrorMsg', `l'addresse n'a pas été renseigné`);
-    } else { errorMsg('addressErrorMsg', ``); }
-
-    if (isEmpty(city)) {
-        errorMsg('cityErrorMsg', `la ville n'a pas été renseigné`);
-    } else { errorMsg('cityErrorMsg', ``); }
-
-    if (isEmpty(email.value)) {
-        errorMsg('emailErrorMsg', `l'émail n'a pas été renseigné`);
-    }
-    if (!isEmpty(email.value) && !isMail(email)) {
-        errorMsg('emailErrorMsg', ``);
-        alert('pas mail')
-        errorMsg('emailErrorMsg', `Entrez une mail valide`);
-    } else {
-        contact = {
-            'firstName': firstName,
-            'lastName': lastName,
-            'address': address,
-            'city': city,
-            'email': email
-        };
-
-    }
-
-    console.log(contact);
-    return contact;
 }
 
 /**
- * Cette fonction vérifie si la chaine recu est au bon format mail  
- *
- * @param {string} inputValue chaine de caractère
- * @returns bool (true ou false) 
+ * Cette fonction supprime completement l'objet cart (panier) si il est vide
  */
-function isMail(inputValue) {
-    ///^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputValue.value)) {
-        return (true)
-    }
-    alert("You have entered an invalid email address!")
-    return (false)
-}
-
-
-/**
- * Cette fonction verifie si il n ya pas e caractère autre que A-Z dans la chaine
- * @param {string} value nom ou prenom
- * @returns bool (true ou false) 
- */
-function validateName(value) {
-
-    const regex = /^[A-Za-z]*\s{1}[A-Za-z]*$/;
-
-    if (value.length === 0) {
-        console.log('chaine vide');
-    }
-    if (!value.match(regex)) {
-        return false;
-    } else {
-        return true;
+function deleteCartFromLocalStorage(param) {
+    let cart = getCart();
+    if (param) {
+        localStorage.clear();
+        localStorage.removeItem("cart");
+    } else if (cart[0] === undefined) {
+        localStorage.removeItem("cart");
     }
 }

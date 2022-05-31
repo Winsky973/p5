@@ -45,11 +45,13 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
 
 
 
+
     addToCart.addEventListener('click', function(e) {
 
         let choice = document.getElementById('colors');
         let colorChoice = choice.value;
         let quantity = document.getElementById('quantity').value;
+        let sku = id + colorChoice;
 
         /**
          * Push des items dans le local storage en format JSON 
@@ -61,32 +63,36 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
             "color": colorChoice,
             "quantity": quantity,
             "id": id,
+            "sku": sku,
         };
 
         let originalCart = [{
             "color": colorChoice,
             "quantity": quantity,
             "id": id,
+            "sku": sku,
         }];
 
 
 
         if (parseInt(quantity) === 0) { alert(`choisissez un nombre d'article`); }
         if (String(colorChoice).length === 0) { alert(`choisissez une couleur`); } else {
-            cardItems = getCart("cart");
 
-            console.log(cardItems);
 
-            if (cardItems !== null) {
+            if (getCart() !== null) {
 
-                updateLocalStorage(cardItems, items, id, colorChoice, quantity);
-
-                setCart('cart', cardItems);
+                let cartItem = addProductToCart(id, colorChoice, parseInt(quantity));
+                if (cartItem === false) {
+                    let cart = getCart();
+                    cart.push(items);
+                    setCart(cart);
+                } else {
+                    setCart(cartItem);
+                }
             } else {
-                setCart('cart', originalCart);
+                setCart(originalCart);
             }
         }
-        /**get cart va récuperer les informatios du local storage */
 
     });
 

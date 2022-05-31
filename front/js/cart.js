@@ -20,8 +20,8 @@ let total = 0,
 /**
  * get cart prend les informations du local storage
  */
-let carts = getCart('cart');
-let productsId = [];
+let carts = getCart();
+let productIds = [];
 
 /**
  * Boucle for of pour recuperer les id et envoyer au backend 
@@ -38,7 +38,7 @@ if (carts !== null) {
                 let product = value;
 
                 /**Stockage des id dans un tableau */
-                productsId.push(cart.id);
+                productIds.push(cart.id);
 
                 let cart__items = document.getElementById('cart__items');
 
@@ -107,20 +107,19 @@ if (carts !== null) {
 
                 let changeQuantity = document.querySelectorAll("div.cart__item__content__settings__quantity > input");;
 
-
                 changeQuantity.forEach(element => {
                     element.addEventListener('change', (e) => {
                         e.stopPropagation;
                         let newQuantity = e.target.value;
-                        let nodeParentId = findParentNodeId(element);
-                        let found = findIdLocalStorage(carts, nodeParentId)
-                        let newCarts = carts;
-                        updateQuantity(carts, found, newQuantity);
+                        let sku = findParentNodeId(element);
+
+                        updateProductCartQuantity(sku, newQuantity);
+                        reloadpage();
                     })
                 });
 
                 //supression d'un élément
-                element.remove(deleteItem);
+                remove(deleteItem);
 
                 /**
                  * Calcule du prix total 
@@ -145,27 +144,22 @@ if (carts !== null) {
 
 /** Envoie de la commande et récupération des informations de l'API*/
 
-let order = document.getElementById('order');
+let form = document.getElementsByTagName('form')[0];
+console.log(form);
 
-order.addEventListener("click", function(event) {
-    event.preventDefault();
-    const shouldChangePage = confirm(
-        "Voulez-vous valider votre commande"
-    );
+form.addEventListener("submit", function(event) {
 
-    if (shouldChangePage) {
-        sendCommand();
+    if (!valideInformationsUser) {
+        alert(`Oups il semberait que vos informations soit incorrect`);
+    } else if (getCart() === null) {
+        alert(`Vous ne pouvez pas passer de commandes car votre panier est vide \nAjoutez quelque chose à votre panier`);
+    } else {
+        //deleteCartFromLocalStorage(1);
+        prepareOrder();
     }
-    console.log("click");
+
+    event.preventDefault();
 });
 
-
-
-
-
-
-function deleteLocalstorage(cardItems, key) {
-    if (cardItems === null) {
-        localStorage.removeItem(key);
-    }
-}
+//let email = document.getElementById('email');
+//let emailError = document.getElementById("emailErrorMsg");
