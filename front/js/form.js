@@ -11,25 +11,6 @@ let city = document.getElementById('city');
 let email = document.getElementById('email');
 
 
-
-
-
-
-function showError(value) {
-    if (value.validity.valueMissing) {
-        // If the field is empty,
-        // display the following error message.
-        value.textContent = 'You need to enter an e-mail address.';
-    } else if (value.validity.typeMismatch) {
-        // If the field doesn't contain an email address,
-        // display the following error message.
-        value.textContent = 'Entered value needs to be an e-mail address.';
-    }
-
-    // Set the styling appropriately
-    value.className = 'cart__order__form__question p';
-}
-
 /**
  * cette fonction va send la commande a l'API et construire l'url qui sera envoyé a la page de confirmation
  */
@@ -57,7 +38,6 @@ async function prepareOrder() {
         })
 }
 
-
 /**
  * Cette fonction vérifie si une chaine est vide ou pas
  * @param {string} value chaine a vérifier 
@@ -76,79 +56,50 @@ function getUserinformations() {
     let contact = {};
 
     firstName.addEventListener('change', function(event) {
-        // Each time the user types something, we check if the
-        // form fields are valid.
-        console.log('validateName(firstName.value) : ', validateName(firstName.value))
 
         if (validateName(firstName.value)) {
             console.log('ok pour le nom');
         } else {
-            // If there is still an error, show the correct error
             errorMsg(firstNameErrorMsg, 'Rentrez un prénom correct');
-            //showError(firstName); 
         }
     });
 
     lastName.addEventListener('change', function(event) {
-        // Each time the user types something, we check if the
-        // form fields are valid.
 
         if (validateName(lastName.value)) {
             console.log('ok pour le nom');
         } else {
-            // If there is still an error, show the correct error
             errorMsg(lastNameErrorMsg, 'Rentrez un prénom correct');
-            //showError(firstName);
 
         }
     });
 
-
-
     address.addEventListener('change', function(event) {
-        // Each time the user types something, we check if the
-        // form fields are valid.
-
         if (validateAdress(address.value)) {
             console.log('ok pour l adress');
 
         } else {
-            // If there is still an error, show the correct error
             errorMsg(addressErrorMsg, 'Rentrez une adresse correct');
-            //showError();
         }
     });
 
-
-
-
     city.addEventListener('change', function(event) {
-        // Each time the user types something, we check if the
-        // form fields are valid.
-
         if (validateName(city.value)) {
             console.log('ok pour la ville');
 
         } else {
-            // If there is still an error, show the correct error
             errorMsg(cityErrorMsg, 'Rentrez une ville correct');
-            //showError();
         }
     });
 
-
     email.addEventListener('input', function(event) {
-        // Each time the user types something, we check if the
-        // form fields are valid.
-
         if (isMail(email.value)) {
             console.log('ok pour le mail');
 
         } else {
             errorMsg(emailErrorMsg, 'Rentrez un mail correct');
             event.addEventLisener();
-            // If there is still an error, show the correct error
-            //showError();
+
         }
     });
 
@@ -166,13 +117,10 @@ function getUserinformations() {
 
 
 
-
-
-
 /**
  * Cette fonction affiche un message en cas d'erreur
  * @param {string} id l'id du tag HTML
- * @param {string} message le message a afficher 
+ * @param {string} message le message à afficher 
  */
 function errorMsg(tag, message) {
     tag.className = 'cart__order__form__question p';
@@ -183,17 +131,14 @@ function errorMsg(tag, message) {
 /**
  * Cette fonction vérifie si la chaine recu est au bon format mail  
  *
- * @param {string} inputValue chaine de caractère
- * @returns bool (true ou false) 
+ * @param {string} value chaine de caractère
+ * @return bool (true ou false) 
  */
 function isMail(value) {
     const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     let test = value.match(regex) ? true : false;
-
     if (!test) {
         return false;
-        alert("You have entered an invalid email address!")
-
     }
     return true;
 }

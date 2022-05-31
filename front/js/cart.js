@@ -113,7 +113,10 @@ if (carts !== null) {
                         let newQuantity = e.target.value;
                         let sku = findParentNodeId(element);
 
-                        updateProductCartQuantity(sku, newQuantity);
+                        console.log('sku : ', sku);
+                        if (sku !== false) {
+                            updateProductCartQuantity(sku, newQuantity);
+                        }
                         reloadpage();
                     })
                 });

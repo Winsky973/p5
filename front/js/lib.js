@@ -40,10 +40,10 @@ class HtmlTag {
 
 
 /**
- * Cette fonction va supprimer produit du local Storage
+ * Cette fonction va supprimer un produit du local Storage
  * Il recois @param {tag} tag qui est un élément html
- * Il trouve l'element l'id du produit dans l'élement parent, supprime le produit du local storage
- * et refresh la page 
+ * Il trouve l'id du produit dans l'élement parent (article), supprime le produit du local storage et refresh la page 
+ * 
  * @param {string} tag element p supprimer
  */
 function remove(tag) {
@@ -54,6 +54,7 @@ function remove(tag) {
             id = findParentNodeId(element);
 
             removeProductFromCart(id);
+            /**Ici si après le retrait d'in produit l'objet cart est vide on le supprimme completement du localstirage et sera récréé après l'ajout d'un nouveau produit */
             deleteCartFromLocalStorage();
             reloadpage();
         })
@@ -72,8 +73,8 @@ function reloadpage() {
 
 /**
  * cette fonction prend l'URL, cherche et renvoie le parametre demandé dans l'URL 
- * @param {string} param le parametre a rechercher
- * @returns string du parametre trouver dans l'url
+ * @param {string} param le parametre à rechercher
+ * @return string du parametre trouver dans l'url
  */
 function getParamUrl(param) {
     let url = new URL(window.location.href);
@@ -83,15 +84,17 @@ function getParamUrl(param) {
 
 /**
  * Cette fonction va chercher le noeud parent de l'enfant
- * si il le trouve, retourne le contenu de data-id de la balise article
+ * si il le trouve, retourne le contenu de data-id + data-color de la balise article qui sera un SKU (identifiant unique)
  * @param {string} child tag html
- * @returns 
+ * @return string sku
  */
 function findParentNodeId(child) {
+    if (child === null) { return false }
     let nodeParent = '',
         id = '',
         color = '',
         sku = '';
+    console.log('child : ', typeof child);
 
     nodeParent = child.parentElement.closest(':not(div)');
     id = nodeParent.getAttribute('data-id');
@@ -139,13 +142,12 @@ function storageAvailable(type) {
 
 /**
  * Cette fonction prend le contenu du local storage et le renvoie
- * @param {string} key la clef 
- * @returns Object sinon un message
+ * @return Object cart, sinon un message erreur
  */
 function getCart() {
     if (storageAvailable('localStorage')) {
-        let cardItems = JSON.parse(localStorage.getItem("cart"));
-        return cardItems;
+        let cart = JSON.parse(localStorage.getItem("cart"));
+        return cart;
     } else {
         console.log('err local storage');
     }
@@ -153,22 +155,24 @@ function getCart() {
 
 /**
  * cette fonction va push les informations dans le local storage
- * @param {Array/object} value tableau / objet d'items
+ * @param {Array/object} value tableau / objet de produits
  */
 function setCart(value) {
     localStorage.setItem("cart", JSON.stringify(value));
 }
 
+
 /**
  * Cette fonction va changer la quantité de produits dans le local storage
- * @param {string} id 
- * @param {string} colorChoice 
- * @param {int} quantity 
+ * @param {string} id l'id du produit
+ * @param {string} colorChoice la couleur du produit
+ * @param {int} quantity la quantité de produits
  */
 function addProductToCart(id, colorChoice, quantity) {
     let cart = getCart();
     let newCart = cart;
-    let found = newCart.findIndex(element => element.id === id && element.color === colorChoice);
+    /*let found = newCart.findIndex(element => element.id === id && element.color === colorChoice);*/
+    let found = findIndexProductFromCart(id + colorChoice);
     if (found !== -1) {
         newCart[found].quantity = parseInt(newCart[found].quantity) + quantity;
         return newCart;
@@ -178,18 +182,16 @@ function addProductToCart(id, colorChoice, quantity) {
 
 }
 
+
 /**
  * Cette fonction va modifier la quantité de produits dans le local storage
- * @param {id} id id de l'élément parent concatener avec la couleur (SKU) du bouton Supprimer
+ * @param {string} sku id de l'élément du produit concatener avec la couleur du produit donnant un id unique (SKU) du bouton Supprimer
  * @param {string} quantity la quantité de produit
  */
-function updateProductCartQuantity(id, quantity) {
+function updateProductCartQuantity(sku, quantity) {
     let cart = getCart();
-    let found = findIndexProductFromCart(id);
-    console.log('found : ', found);
+    let found = findIndexProductFromCart(sku);
 
-    /*console.log('id : ', id);
-    console.log('quantity : ', quantity);*/
     cart[found].quantity = parseInt(quantity);
     setCart(cart);
 }
@@ -202,8 +204,8 @@ function updateProductCartQuantity(id, quantity) {
  */
 function findIndexProductFromCart(sku) {
     let cart = getCart();
-
     let found = cart.findIndex(element => element.sku === sku);
+
     return found;
 }
 
@@ -222,6 +224,7 @@ function removeProductFromCart(id) {
 
 /**
  * Cette fonction supprime completement l'objet cart (panier) si il est vide
+ * @param {boolean} param si définit on clear le local storage et on remove cart du local storage
  */
 function deleteCartFromLocalStorage(param) {
     let cart = getCart();
