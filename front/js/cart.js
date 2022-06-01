@@ -30,34 +30,26 @@ if (carts !== null) {
                 let element = new HtmlTag();
 
                 /**Creation de la balise <article> */
-                let article = element.create("article", {
-                        "data-id": cart.id,
-                        "data-color": cart.color
-                    },
-                    "cart__item", "");
+                let article = element.create("article", { "data-id": cart.id, "data-color": cart.color }, "cart__item", );
                 cart__items.appendChild(article);
 
                 /**Creation de la balise <div> */
-                let newDiv = element.create("div", "", "cart__item__img", "");
+                let newDiv = element.create("div", "", "cart__item__img");
                 article.appendChild(newDiv);
 
 
                 /**Creation de l'image */
-                let newImage = element.create("img", {
-                        src: product.imageUrl,
-                        alt: product.altTxt
-                    },
-                    "cart__item__content", "");
+                let newImage = element.create("img", { src: product.imageUrl, alt: product.altTxt }, "cart__item__content");
                 newDiv.appendChild(newImage);
 
                 /**Creation de la balise div d'items */
                 let divItemContent = element.create("div", {},
-                    "cart__item__content", "");
+                    "cart__item__content");
                 article.appendChild(divItemContent);
 
                 /**Creation de la balise div de description */
                 let divItemDescription = element.create("div", {},
-                    "cart__item__content__description", "");
+                    "cart__item__content__description");
                 divItemContent.appendChild(divItemDescription);
 
                 /**Creation de la balise h2 */
@@ -73,12 +65,10 @@ if (carts !== null) {
                 divItemDescription.appendChild(newPrice);
 
 
-                let divItemSettings = element.create("div", {},
-                    "cart__item__content__settings", "");
+                let divItemSettings = element.create("div", {}, "cart__item__content__settings");
                 divItemContent.appendChild(divItemSettings);
 
-                let divItemSettingsQuantity = element.create("div", {},
-                    "cart__item__content__settings__quantity", "");
+                let divItemSettingsQuantity = element.create("div", {}, "cart__item__content__settings__quantity");
                 divItemSettings.appendChild(divItemSettingsQuantity);
 
                 let newPQuantity = element.create("p", {}, "", "Qté :");
@@ -93,11 +83,10 @@ if (carts !== null) {
                 };
                 let newInput = element.create("input",
                     newObject,
-                    "itemQuantity", '');
+                    "itemQuantity");
                 divItemSettingsQuantity.appendChild(newInput);
 
-                let divItemSettingsDelete = element.create("div", {},
-                    "cart__item__content__settings__delete", "");
+                let divItemSettingsDelete = element.create("div", {}, "cart__item__content__settings__delete");
                 divItemSettings.appendChild(divItemSettingsDelete);
 
 
@@ -119,11 +108,10 @@ if (carts !== null) {
                         let newQuantity = e.target.value;
                         let sku = findParentNodeId(element);
 
-                        console.log("sku : ", sku);
                         if (sku !== false) {
                             updateProductCartQuantity(sku, newQuantity);
                         }
-                        reloadpage();
+                        reloadPage();
                     })
                 });
 
@@ -154,11 +142,10 @@ if (carts !== null) {
 /** Envoie de la commande et récupération des informations de l'API*/
 
 let form = document.getElementsByTagName("form")[0];
-console.log(form);
 
 form.addEventListener("submit", function(event) {
 
-    if (!valideInformationsUser) {
+    if (!valideInformationsUser()) {
         alert(`Oups il semberait que vos informations soit incorrect`);
     } else if (getCart() === null) {
         alert(`Vous ne pouvez pas passer de commandes car votre panier est vide \nAjoutez quelque chose à votre panier`);

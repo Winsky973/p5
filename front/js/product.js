@@ -24,7 +24,7 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
     document.getElementsByTagName("title")[0].textContent = products.name;
 
     /** affichage de l'image*/
-    let image = element.create("img", { src: products.imageUrl, alt: products.altTxt }, "", "");
+    let image = element.create("img", { src: products.imageUrl, alt: products.altTxt });
     item_img.appendChild(image);
 
     /** Affichage du prix*/

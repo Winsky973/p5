@@ -14,8 +14,8 @@ let email = document.getElementById("email");
 /**
  * cette fonction va send la commande a l'API et construire l'url qui sera envoyé a la page de confirmation
  */
-async function prepareOrder() {
-    let contact = await getUserinformations();
+function prepareOrder() {
+    let contact = getUserinformations();
 
     fetch("http://localhost:3000/api/products/order", {
             method: "POST",
@@ -44,10 +44,7 @@ async function prepareOrder() {
  * @returns 
  */
 function isEmpty(value) {
-    if (value.length === 0 ||
-        value === "" ||
-        typeof value === 'undefined'
-    ) { return true; } else { return false }
+    if (value.length === 0 || value === "" || typeof value === 'undefined') { return true; } else { return false }
 }
 
 

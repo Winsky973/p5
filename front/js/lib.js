@@ -16,7 +16,7 @@ class HtmlTag {
      * @param {sring} textContent Texte à ajouter à l'element
      * @returns une chaine HTML construite
      */
-    create(tag, attr, addClass, textContent) {
+    create(tag = "", attr = "", addClass = "", textContent = "") {
         let element = document.createElement(tag);
         if (attr !== "undefined") {
             for (const key in attr) {
@@ -56,7 +56,7 @@ function remove(tag) {
             removeProductFromCart(id);
             /**Ici si après le retrait d'in produit l'objet cart est vide on le supprimme completement du localstirage et sera récréé après l'ajout d'un nouveau produit */
             deleteCartFromLocalStorage();
-            reloadpage();
+            reloadPage();
         })
     });
 }
@@ -64,10 +64,9 @@ function remove(tag) {
 /**
  * Cette fonction va rafraichir la page
  */
-function reloadpage() {
+function reloadPage() {
     window.location.reload();
 }
-
 
 
 
@@ -76,7 +75,7 @@ function reloadpage() {
  * @param {string} param le parametre à rechercher
  * @return string du parametre trouver dans l'url
  */
-function getParamUrl(param) {
+function getParamUrl(param = "") {
     let url = new URL(window.location.href);
     let id = url.searchParams.get(param);
     return id;
@@ -146,18 +145,20 @@ function storageAvailable(type) {
 function getCart() {
     if (storageAvailable("localStorage")) {
         let cart = JSON.parse(localStorage.getItem("cart"));
+        /* if (cart === null) {
+             return [];
+         } else {}*/
         return cart;
-    } else {
         console.log("err local storage");
     }
 }
 
 /**
  * cette fonction va push les informations dans le local storage
- * @param {Array/object} value tableau / objet de produits
+ * @param {Array/object} productArray tableau / objet de produits
  */
-function setCart(value) {
-    localStorage.setItem("cart", JSON.stringify(value));
+function setCart(productArray) {
+    localStorage.setItem("cart", JSON.stringify(productArray));
 }
 
 
@@ -210,11 +211,11 @@ function findIndexProductFromCart(sku) {
 
 /**
  * Trouve, supprime un élément du tableau et push le nouveau tableau dans le localstorage
- * @param {String} id
+ * @param {String} sku
  */
-function removeProductFromCart(id) {
+function removeProductFromCart(sku) {
     let cart = getCart();
-    let found = findIndexProductFromCart(id);
+    let found = findIndexProductFromCart(sku);
     if (found !== -1) {
         cart.splice(found, 1);
         setCart(cart);
