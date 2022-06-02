@@ -144,11 +144,15 @@ function storageAvailable(type) {
  */
 function getCart() {
     if (storageAvailable("localStorage")) {
-        let cart = JSON.parse(localStorage.getItem("cart"));
-        /* if (cart === null) {
-             return [];
-         } else {}*/
-        return cart;
+
+        if (localStorage.getItem("cart") === null) {
+            setCart([])
+            return JSON.parse(localStorage.getItem("cart"));
+
+        } else {
+            return JSON.parse(localStorage.getItem("cart"));
+        }
+    } else {
         console.log("err local storage");
     }
 }
@@ -170,16 +174,24 @@ function setCart(productArray) {
  */
 function addProductToCart(id, colorChoice, quantity) {
     let cart = getCart();
-    let newCart = cart;
-    /*let found = newCart.findIndex(element => element.id === id && element.color === colorChoice);*/
-    let found = findIndexProductFromCart(id + colorChoice);
-    if (found !== -1) {
-        newCart[found].quantity = parseInt(newCart[found].quantity) + quantity;
-        return newCart;
-    } else {
-        return false;
-    }
+    let sku = id + colorChoice;
 
+    let items = {
+        "color": colorChoice,
+        "quantity": quantity,
+        "id": id,
+        "sku": sku,
+    };
+
+    let found = findIndexProductFromCart(id + colorChoice);
+    console.log('found : ', found);
+
+    if (found !== -1) {
+        cart[found].quantity = parseInt(cart[found].quantity) + quantity;
+    } else {
+        cart.push(items);
+    }
+    setCart(cart);
 }
 
 

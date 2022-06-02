@@ -9,6 +9,7 @@ let lastName = document.getElementById("lastName");
 let address = document.getElementById("address");
 let city = document.getElementById("city");
 let email = document.getElementById("email");
+addEventListener("DOMContentLoaded", initValidationForm());
 
 
 /**
@@ -55,54 +56,6 @@ function isEmpty(value) {
 function getUserinformations() {
     let contact = {};
 
-    firstName.addEventListener("change", function(event) {
-
-        if (validateName(firstName.value)) {
-            console.log("ok pour le nom");
-        } else {
-            errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
-        }
-    });
-
-    lastName.addEventListener("change", function(event) {
-
-        if (validateName(lastName.value)) {
-            console.log("ok pour le nom");
-        } else {
-            errorMsg(lastNameErrorMsg, "Rentrez un prénom correct");
-
-        }
-    });
-
-    address.addEventListener("change", function(event) {
-        if (validateAdress(address.value)) {
-            console.log("ok pour l adress");
-
-        } else {
-            errorMsg(addressErrorMsg, "Rentrez une adresse correct");
-        }
-    });
-
-    city.addEventListener("change", function(event) {
-        if (validateName(city.value)) {
-            console.log("ok pour la ville");
-
-        } else {
-            errorMsg(cityErrorMsg, "Rentrez une ville correct");
-        }
-    });
-
-    email.addEventListener("change", function(event) {
-        if (isMail(email.value)) {
-            console.log("ok pour le mail");
-
-        } else {
-            errorMsg(emailErrorMsg, "Rentrez un mail correct");
-            event.addEventLisener();
-
-        }
-    });
-
     contact = {
         "firstName": firstName.value,
         "lastName": lastName.value,
@@ -113,6 +66,69 @@ function getUserinformations() {
 
     console.log(contact);
     return contact;
+}
+
+
+function initValidationForm() {
+    let contactInformationArray = [];
+    addEventListener("DOMContentLoaded", (e) => {
+        firstName.addEventListener("change", function(event) {
+
+            if (!validateName(firstName.value)) {
+                errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
+                firstName.focus();
+                event.preventDefault();
+            } else {
+                contactInformationArray.push(firstName.value);
+                errorMsg(firstNameErrorMsg, "");
+            }
+        });
+
+        lastName.addEventListener("change", function(event) {
+
+            if (!validateName(lastName.value)) {
+                errorMsg(lastNameErrorMsg, "Rentrez un prénom correct");
+                lastName.focus();
+                event.preventDefault();
+
+            } else {
+                errorMsg(lastNameErrorMsg, "");
+            }
+        });
+
+        address.addEventListener("change", function(event) {
+            if (!validateAdress(address.value)) {
+                errorMsg(addressErrorMsg, "Rentrez une adresse correct");
+                address.focus();
+                event.preventDefault();
+            } else {
+                errorMsg(addressErrorMsg, "");
+            }
+        });
+
+        city.addEventListener("change", function(event) {
+            if (!validateName(city.value)) {
+                errorMsg(cityErrorMsg, "Rentrez une ville correct");
+                city.focus();
+                event.preventDefault();
+
+            } else {
+                errorMsg(cityErrorMsg, "");
+            }
+        });
+
+        email.addEventListener("change", function(event) {
+            if (!isMail(email.value)) {
+                errorMsg(emailErrorMsg, "Rentrez un mail correct");
+                email.focus();
+                event.addEventLisener();
+
+            } else {
+                errorMsg(emailErrorMsg, "");
+            }
+        });
+    })
+
 }
 
 

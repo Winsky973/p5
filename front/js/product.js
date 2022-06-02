@@ -51,7 +51,7 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
         let choice = document.getElementById("colors");
         let colorChoice = choice.value;
         let quantity = document.getElementById("quantity").value;
-        let sku = id + colorChoice;
+
 
         /**
          * Push des items dans le local storage en format JSON 
@@ -59,40 +59,14 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
          * Si il existe on le prend et push items a la fin
          */
 
-        let items = {
-            "color": colorChoice,
-            "quantity": quantity,
-            "id": id,
-            "sku": sku,
-        };
-
-        let originalCart = [{
-            "color": colorChoice,
-            "quantity": quantity,
-            "id": id,
-            "sku": sku,
-        }];
-
-
-
-        if (parseInt(quantity) === 0) { alert(`choisissez un nombre d'article`); }
-        if (String(colorChoice).length === 0) { alert(`choisissez une couleur`); } else {
-
-
-            if (getCart() !== null) {
-
-                let cartItem = addProductToCart(id, colorChoice, parseInt(quantity));
-                if (cartItem === false) {
-                    let cart = getCart();
-                    cart.push(items);
-                    setCart(cart);
-                } else {
-                    setCart(cartItem);
-                }
-            } else {
-                setCart(originalCart);
-            }
+        if (String(colorChoice).length === 0) {
+            alert(`choisissez une couleur`);
         }
+        if (parseInt(quantity) < 1) {
+            alert(`choisissez un nombre d'article`);
+        }
+
+        addProductToCart(id, colorChoice, parseInt(quantity));
 
     });
 

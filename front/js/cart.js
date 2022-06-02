@@ -144,15 +144,14 @@ if (carts !== null) {
 let form = document.getElementsByTagName("form")[0];
 
 form.addEventListener("submit", function(event) {
-
     if (!valideInformationsUser()) {
         alert(`Oups il semberait que vos informations soit incorrect`);
-    } else if (getCart() === null) {
+    } else if (getCart() === []) {
         alert(`Vous ne pouvez pas passer de commandes car votre panier est vide \nAjoutez quelque chose à votre panier`);
     } else {
-        //deleteCartFromLocalStorage(1);
-        prepareOrder();
+        event.preventDefault();
+        //prepareOrder();
+        alert('');
     }
 
-    event.preventDefault();
 });
