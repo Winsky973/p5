@@ -144,14 +144,21 @@ if (carts !== null) {
 let form = document.getElementsByTagName("form")[0];
 
 form.addEventListener("submit", function(event) {
-    if (!valideInformationsUser()) {
-        alert(`Oups il semberait que vos informations soit incorrect`);
-    } else if (getCart() === []) {
-        alert(`Vous ne pouvez pas passer de commandes car votre panier est vide \nAjoutez quelque chose à votre panier`);
-    } else {
-        event.preventDefault();
-        //prepareOrder();
-        alert('');
-    }
+    console.log('valideInformationsUser() : ', valideInformationsUser());
+    let contact = getUserinformations();
+    let cart = getCart();
+    let valide = valideInformationsUser();
+    console.log("valide : ", valide);
 
+    event.preventDefault();
+
+    if (!valide) {
+        alert(`Oups il semberait que vos informations soit incorrect`);
+        event.preventDefault();
+    } else if (cart[0] === undefined) {
+        alert(`Vous ne pouvez pas passer de commandes car votre panier est vide \nAjoutez quelque chose à votre panier`);
+        event.preventDefault();
+    } else {
+        //prepareOrder(contact);
+    }
 });

@@ -38,6 +38,11 @@ class HtmlTag {
 }
 
 
+/************************
+ * Fonctions génériques *
+ ************************/
+
+
 
 /**
  * Cette fonction va supprimer un produit du local Storage
@@ -54,8 +59,6 @@ function remove(tag) {
             id = findParentNodeId(element);
 
             removeProductFromCart(id);
-            /**Ici si après le retrait d'in produit l'objet cart est vide on le supprimme completement du localstirage et sera récréé après l'ajout d'un nouveau produit */
-            deleteCartFromLocalStorage();
             reloadPage();
         })
     });
@@ -104,11 +107,9 @@ function findParentNodeId(child) {
 
 
 
-
-/**
- * LOCAL STORAGE
- * 
- */
+/*****************
+ * LOCAL STORAGE *
+ ****************/
 
 /**
  * cette fonction test si le local storage est pris en charge par le navigateur
@@ -231,19 +232,5 @@ function removeProductFromCart(sku) {
     if (found !== -1) {
         cart.splice(found, 1);
         setCart(cart);
-    }
-}
-
-/**
- * Cette fonction supprime completement l'objet cart (panier) si il est vide
- * @param {boolean} param si définit on clear le local storage et on remove cart du local storage
- */
-function deleteCartFromLocalStorage(param) {
-    let cart = getCart();
-    if (param) {
-        localStorage.clear();
-        localStorage.removeItem("cart");
-    } else if (cart[0] === undefined) {
-        localStorage.removeItem("cart");
     }
 }

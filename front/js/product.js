@@ -64,9 +64,9 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
         }
         if (parseInt(quantity) < 1) {
             alert(`choisissez un nombre d'article`);
+        } else {
+            addProductToCart(id, colorChoice, parseInt(quantity));
         }
-
-        addProductToCart(id, colorChoice, parseInt(quantity));
 
     });
 
