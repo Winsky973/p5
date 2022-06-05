@@ -7,7 +7,6 @@ let lastName = document.getElementById("lastName");
 let address = document.getElementById("address");
 let city = document.getElementById("city");
 let email = document.getElementById("email");
-//addEventListener("DOMContentLoaded", initValidationForm());
 
 
 /**
@@ -16,173 +15,93 @@ let email = document.getElementById("email");
  */
 function getUserinformations() {
     let contact = {};
-
-    /*addEventListener("DOMContentLoaded", (e) => {
-        firstName.addEventListener("change", function(event) {
-
-            if (!validateName(firstName.value)) {
-                errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
-                firstName.focus();
-                event.preventDefault();
-            } else {
-                contactInformationArray.push(firstName.value);
-                errorMsg(firstNameErrorMsg, "");
-            }
-        });
-
-        lastName.addEventListener("change", function(event) {
-
-            if (!validateName(lastName.value)) {
-                errorMsg(lastNameErrorMsg, "Rentrez un prénom correct");
-                lastName.focus();
-                event.preventDefault();
-
-            } else {
-                errorMsg(lastNameErrorMsg, "");
-            }
-        });
-
-        address.addEventListener("change", function(event) {
-            if (!validateAdress(address.value)) {
-                errorMsg(addressErrorMsg, "Rentrez une adresse correct");
-                address.focus();
-                event.preventDefault();
-            } else {
-                errorMsg(addressErrorMsg, "");
-            }
-        });
-
-        city.addEventListener("change", function(event) {
-            if (!validateName(city.value)) {
-                errorMsg(cityErrorMsg, "Rentrez une ville correct");
-                city.focus();
-                event.preventDefault();
-
-            } else {
-                errorMsg(cityErrorMsg, "");
-            }
-        });
-
-        email.addEventListener("change", function(event) {
-            if (!isMail(email.value)) {
-                errorMsg(emailErrorMsg, "Rentrez un mail correct");
-                email.focus();
-                event.addEventLisener();
-
-            } else {
-                errorMsg(emailErrorMsg, "");
-            }
-        });
-    })*/
-
-    contact = {
-        "firstName": firstName.value,
-        "lastName": lastName.value,
-        "address": address.value,
-        "city": city.value,
-        "email": email.value,
-    };
-
+    const formData = new FormData(form);
+    const firstName = formData.get('firstName');
+    const lastName = formData.get('lastName');
+    const address = formData.get('address');
+    const city = formData.get('city');
+    const email = formData.get('email');
+    contact = { firstName, lastName, address, city, email }
     return contact;
+}
+
+
+function initValidationForm() {
+
+    firstName.addEventListener("change", function(event) {
+        if (!validateName(firstName.value)) {
+            errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
+            firstName.focus();
+            event.preventDefault();
+        } else {
+            errorMsg(firstNameErrorMsg, "");
+        }
+    });
+
+    lastName.addEventListener("change", function(event) {
+
+        if (!validateName(lastName.value)) {
+            errorMsg(lastNameErrorMsg, "Rentrez un prénom correct");
+            lastName.focus();
+            event.preventDefault();
+
+        } else {
+            errorMsg(lastNameErrorMsg, "");
+        }
+    });
+
+    address.addEventListener("change", function(event) {
+        if (!validateAdress(address.value)) {
+            errorMsg(addressErrorMsg, "Rentrez une adresse correct");
+            address.focus();
+            event.preventDefault();
+        } else {
+            errorMsg(addressErrorMsg, "");
+        }
+    });
+
+    city.addEventListener("change", function(event) {
+        if (!validateName(city.value)) {
+            errorMsg(cityErrorMsg, "Rentrez une ville correct");
+            city.focus();
+            event.preventDefault();
+
+        } else {
+            errorMsg(cityErrorMsg, "");
+        }
+    });
+
+    email.addEventListener("change", function(event) {
+        if (!isMail(email.value)) {
+            errorMsg(emailErrorMsg, "Rentrez un mail correct");
+            email.focus();
+            event.addEventLisener();
+
+        } else {
+            errorMsg(emailErrorMsg, "");
+        }
+    });
+
 }
 
 
 function valideInformationsUser() {
     let contact = getUserinformations();
-    console.log('contact : ', contact);
+    let conforme = validateName(contact.firstName) && validateName(contact.lastName) && validateAdress(contact.address) && validateName(contact.city) && isMail(contact.email);
 
-    if (!validateName(contact.firstName)) {
-        showMsg(contact.firstName)
-        errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
-        firstName.focus();
-    }
-    if (!validateName(contact.lastName)) {
-        errorMsg(lastNameErrorMsg, "Rentrez un nom correct");
-        lastName.focus();
-    }
-    if (!validateAdress(contact.address)) {
-        errorMsg(addressErrorMsg, "Rentrez une adresse correct");
-        address.focus();
-    }
-    if (!validateName(contact.city)) {
-        errorMsg(cityErrorMsg, "Rentrez une ville correct");
-        city.focus();
-    }
-    if (!isMail(contact.email)) {
-        errorMsg(emailErrorMsg, "Rentrez un mail correct");
-        email.focus();
+    if (conforme) {
+        return true;
+    } else {
+        return false;
     }
 }
-
-
-/*function initValidationForm() {
-    let contactInformationArray = [];
-    addEventListener("DOMContentLoaded", (e) => {
-        firstName.addEventListener("change", function(event) {
-
-            if (!validateName(firstName.value)) {
-                errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
-                firstName.focus();
-                event.preventDefault();
-            } else {
-                contactInformationArray.push(firstName.value);
-                errorMsg(firstNameErrorMsg, "");
-            }
-        });
-
-        lastName.addEventListener("change", function(event) {
-
-            if (!validateName(lastName.value)) {
-                errorMsg(lastNameErrorMsg, "Rentrez un prénom correct");
-                lastName.focus();
-                event.preventDefault();
-
-            } else {
-                errorMsg(lastNameErrorMsg, "");
-            }
-        });
-
-        address.addEventListener("change", function(event) {
-            if (!validateAdress(address.value)) {
-                errorMsg(addressErrorMsg, "Rentrez une adresse correct");
-                address.focus();
-                event.preventDefault();
-            } else {
-                errorMsg(addressErrorMsg, "");
-            }
-        });
-
-        city.addEventListener("change", function(event) {
-            if (!validateName(city.value)) {
-                errorMsg(cityErrorMsg, "Rentrez une ville correct");
-                city.focus();
-                event.preventDefault();
-
-            } else {
-                errorMsg(cityErrorMsg, "");
-            }
-        });
-
-        email.addEventListener("change", function(event) {
-            if (!isMail(email.value)) {
-                errorMsg(emailErrorMsg, "Rentrez un mail correct");
-                email.focus();
-                event.addEventLisener();
-
-            } else {
-                errorMsg(emailErrorMsg, "");
-            }
-        });
-    })
-
-}*/
 
 
 /**
  * cette fonction va send la commande a l'API et construire l'url qui sera envoyé a la page de confirmation
  */
-function prepareOrder(contact) {
-    //let contact = getUserinformations();
+function prepareOrder() {
+    let contact = getUserinformations();
 
     fetch("http://localhost:3000/api/products/order", {
             method: "POST",
@@ -212,6 +131,7 @@ function prepareOrder(contact) {
  * @param {string} message le message à afficher 
  */
 function errorMsg(tag, message) {
+    let tag1 = document.getElementById(tag);
     tag.className = "cart__order__form__question p";
     tag.textContent = message;
 }
@@ -249,7 +169,6 @@ function isMail(value) {
  * @returns bool (true ou false) 
  */
 function validateName(value) {
-
     const regex = /^[a-zA-Z]+$/;
 
     if (value.length === 0) {
