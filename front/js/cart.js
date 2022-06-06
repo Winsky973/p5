@@ -8,11 +8,13 @@ let totalQuantity = 0;
 
 let carts = getCart();
 let productIds = [];
+let element = new HtmlTag();
 
+console.log("cart[0] : ", carts[0]);
 
 //Boucle for of pour recuperer les id et envoyer au backend 
 
-if (carts !== null) {
+if (carts[0] !== undefined) {
     for (const cart of carts) {
         fetch("http://localhost:3000/api/products/" + cart.id).then(function(res) {
                 if (res.ok) {
@@ -27,7 +29,6 @@ if (carts !== null) {
 
                 let cart__items = document.getElementById("cart__items");
 
-                let element = new HtmlTag();
 
                 /**Creation de la balise <article> */
                 let article = element.create("article", { "data-id": cart.id, "data-color": cart.color }, "cart__item", );
@@ -136,25 +137,10 @@ if (carts !== null) {
 
 
 } else {
-    alert(`vous n'avez choisis aucun produit`);
+    let cartAndFormContainer = document.getElementById("cartAndFormContainer");
+    let panierVide = element.create("p", { "style": "text-align: center" }, "", "votre panier est vide"); //<p style="text-align: center">votre panier est Vide</p>
+
+    cartAndFormContainer.insertBefore(panierVide, cartAndFormContainer.children[1]);
 }
 
 /** Envoie de la commande et récupération des informations de l'API*/
-
-let form = document.getElementsByTagName("form")[0];
-initValidationForm();
-form.addEventListener("submit", (event) => {
-    let contact = getUserinformations();
-    let valide = valideInformationsUser(contact);
-    let cart = getCart();
-
-    if (!valide) {
-        alert(`Oups il y'a une ou plusieurs données invalide`);
-    } else if (cart[0] === undefined) {
-        alert(`Vous ne pouvez pas passer de commandes car votre panier est vide \nAjoutez quelque chose à votre panier`);
-
-    } else {
-        prepareOrder();
-    }
-    event.preventDefault();
-});

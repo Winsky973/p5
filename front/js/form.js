@@ -7,6 +7,27 @@ let lastName = document.getElementById("lastName");
 let address = document.getElementById("address");
 let city = document.getElementById("city");
 let email = document.getElementById("email");
+let form = document.getElementsByTagName("form")[0];
+
+
+
+initValidationForm();
+/**Ici nous allons valider les infos de l'utilisateur avant de tout envoyer */
+form.addEventListener("submit", (event) => {
+    let contact = getUserinformations();
+    let valide = valideInformationsUser(contact);
+    let cart = getCart();
+
+    if (!valide) {
+        alert(`Oups il y'a une ou plusieurs données invalide`);
+    } else if (cart[0] === undefined) {
+        alert(`Vous ne pouvez pas passer de commandes car votre panier est vide \nAjoutez quelque chose à votre panier`);
+
+    } else {
+        prepareOrder();
+    }
+    event.preventDefault();
+});
 
 
 /**
