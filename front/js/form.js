@@ -15,7 +15,7 @@ initValidationForm();
 /**Ici nous allons valider les infos de l'utilisateur avant de tout envoyer */
 form.addEventListener("submit", (event) => {
     let contact = getUserinformations();
-    let valide = valideInformationsUser(contact);
+    let valide = valideInformationsUser();
     let cart = getCart();
 
     if (!valide) {
