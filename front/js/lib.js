@@ -74,7 +74,7 @@ function reloadPage() {
 
 
 /**
- * cette fonction prend l'URL, cherche et renvoie le parametre demandé dans l'URL 
+ * cette fonction prend l'URL, cherche et renvoie le parametre demandés
  * @param {string} param le parametre à rechercher
  * @return string du parametre trouver dans l'url
  */
@@ -168,7 +168,7 @@ function setCart(productArray) {
 
 
 /**
- * Cette fonction va changer la quantité de produits dans le local storage
+ * Cette fonction va changer ajouter les produits dans le local storage
  * @param {string} id l'id du produit
  * @param {string} colorChoice la couleur du produit
  * @param {int} quantity la quantité de produits
@@ -197,7 +197,7 @@ function addProductToCart(id, colorChoice, quantity) {
 
 /**
  * Cette fonction va modifier la quantité de produits dans le local storage
- * @param {string} sku id de l'élément du produit concatener avec la couleur du produit donnant un id unique (SKU) du bouton Supprimer
+ * @param {string} sku id de l'élément du produit concatener avec la couleur du produit donnant un id unique (SKU)
  * @param {string} quantity la quantité de produit
  */
 function updateProductCartQuantity(sku, quantity) {

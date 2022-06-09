@@ -47,6 +47,7 @@ function getUserinformations() {
 }
 
 
+/**Cette fonction surveille les champs afin de voir les differents changement */
 function initValidationForm() {
 
     firstName.addEventListener("change", function(event) {
@@ -100,7 +101,7 @@ function initValidationForm() {
 
 }
 
-
+/**Cette fontion vérifie si les informations utilisateur sont valide et respecte un bon format */
 function valideInformationsUser() {
     let contact = getUserinformations();
     let conforme = validateWordString(contact.firstName) && validateWordString(contact.lastName) && validateAdress(contact.address) && validateWordString(contact.city) && isMail(contact.email);
@@ -180,8 +181,8 @@ function isMail(value) {
 
 
 /**
- * Cette fonction verifie si il n ya pas e caractère autre que A-Z dans la chaine
- * @param {string} value nom ou prenom
+ * Cette fonction verifie si il n'y a pas de caractère autre que "a-zA-ZÀ-ú- " dans la chaine
+ * @param {string} value la chaine à tester
  * @returns bool (true ou false) 
  */
 function validateWordString(value) {
