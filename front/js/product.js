@@ -44,8 +44,7 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
     }
 
 
-
-
+    /***Ici on ajoute les items dans le local storage au click de l'utilisateur après avoir choisis une couleur et une quantité */
     addToCart.addEventListener("click", function(e) {
 
         let choice = document.getElementById("colors");
@@ -53,19 +52,14 @@ fetch("http://localhost:3000/api/products/" + id).then(function(res) {
         let quantity = document.getElementById("quantity").value;
 
 
-        /**
-         * Push des items dans le local storage en format JSON 
-         * Si l'objet n'est pas dans le  local storage on push originalCart
-         * Si il existe on le prend et push items a la fin
-         */
-
-        if (String(colorChoice).length === 0) {
-            alert(`choisissez une couleur`);
-        }
         if (parseInt(quantity) < 1) {
             alert(`choisissez un nombre d'article`);
         } else {
-            addProductToCart(id, colorChoice, parseInt(quantity));
+            if (String(colorChoice).length === 0) {
+                alert(`choisissez une couleur`);
+            } else {
+                addProductToCart(id, colorChoice, parseInt(quantity));
+            }
         }
 
     });

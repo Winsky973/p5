@@ -10,8 +10,6 @@ let carts = getCart();
 let productIds = [];
 let element = new HtmlTag();
 
-console.log("cart[0] : ", carts[0]);
-
 //Boucle for of pour recuperer les id et envoyer au backend 
 
 if (carts[0] !== undefined) {
@@ -135,12 +133,15 @@ if (carts[0] !== undefined) {
             })
     }
 
-
-} else {
+} else { /**Ici on gère le cas où le panier serai vide */
     let cartAndFormContainer = document.getElementById("cartAndFormContainer");
     let panierVide = element.create("p", { "style": "text-align: center" }, "", "votre panier est vide"); //<p style="text-align: center">votre panier est Vide</p>
+
+    /**Ici on enleve du DOM toute la partie cart */
+    let cartSectionNode = document.querySelector("section.cart");
+    cartAndFormContainer.removeChild(cartSectionNode);
 
     cartAndFormContainer.insertBefore(panierVide, cartAndFormContainer.children[1]);
 }
 
-/** Envoie de la commande et récupération des informations de l'API*/
+/** Envoie e la commande et récupération des informations de l'API*/

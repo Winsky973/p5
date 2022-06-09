@@ -154,7 +154,7 @@ function getCart() {
             return JSON.parse(localStorage.getItem("cart"));
         }
     } else {
-        console.log("err local storage");
+        console.log("err local non suppoerté");
     }
 }
 
@@ -185,13 +185,12 @@ function addProductToCart(id, colorChoice, quantity) {
     };
 
     let found = findIndexProductFromCart(id + colorChoice);
-    console.log('found : ', found);
-
     if (found !== -1) {
         cart[found].quantity = parseInt(cart[found].quantity) + quantity;
     } else {
         cart.push(items);
     }
+
     setCart(cart);
 }
 

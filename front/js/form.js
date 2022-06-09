@@ -50,9 +50,8 @@ function getUserinformations() {
 function initValidationForm() {
 
     firstName.addEventListener("change", function(event) {
-        if (!validateName(firstName.value)) {
+        if (!validateWordString(firstName.value)) {
             errorMsg(firstNameErrorMsg, "Rentrez un prénom correct");
-            firstName.focus();
             event.preventDefault();
         } else {
             errorMsg(firstNameErrorMsg, "");
@@ -61,9 +60,8 @@ function initValidationForm() {
 
     lastName.addEventListener("change", function(event) {
 
-        if (!validateName(lastName.value)) {
+        if (!validateWordString(lastName.value)) {
             errorMsg(lastNameErrorMsg, "Rentrez un prénom correct");
-            lastName.focus();
             event.preventDefault();
 
         } else {
@@ -74,7 +72,6 @@ function initValidationForm() {
     address.addEventListener("change", function(event) {
         if (!validateAdress(address.value)) {
             errorMsg(addressErrorMsg, "Rentrez une adresse correct");
-            address.focus();
             event.preventDefault();
         } else {
             errorMsg(addressErrorMsg, "");
@@ -82,9 +79,8 @@ function initValidationForm() {
     });
 
     city.addEventListener("change", function(event) {
-        if (!validateName(city.value)) {
+        if (!validateWordString(city.value)) {
             errorMsg(cityErrorMsg, "Rentrez une ville correct");
-            city.focus();
             event.preventDefault();
 
         } else {
@@ -95,8 +91,7 @@ function initValidationForm() {
     email.addEventListener("change", function(event) {
         if (!isMail(email.value)) {
             errorMsg(emailErrorMsg, "Rentrez un mail correct");
-            email.focus();
-            event.addEventLisener();
+            event.preventDefault();
 
         } else {
             errorMsg(emailErrorMsg, "");
@@ -108,7 +103,7 @@ function initValidationForm() {
 
 function valideInformationsUser() {
     let contact = getUserinformations();
-    let conforme = validateName(contact.firstName) && validateName(contact.lastName) && validateAdress(contact.address) && validateName(contact.city) && isMail(contact.email);
+    let conforme = validateWordString(contact.firstName) && validateWordString(contact.lastName) && validateAdress(contact.address) && validateWordString(contact.city) && isMail(contact.email);
 
     if (conforme) {
         return true;
@@ -164,7 +159,7 @@ function errorMsg(tag, message) {
  * @returns 
  */
 function isEmpty(value) {
-    if (value.length === 0 || value === "" || typeof value === 'undefined') { return true; } else { return false }
+    if (value.length === 0 || value === "" || typeof value === 'undefined') { return true; } else { return false; }
 }
 
 
@@ -189,8 +184,8 @@ function isMail(value) {
  * @param {string} value nom ou prenom
  * @returns bool (true ou false) 
  */
-function validateName(value) {
-    const regex = /^[a-zA-Z]+$/;
+function validateWordString(value) {
+    const regex = /^[a-zA-ZÀ-ú- ]+$/;
 
     if (value.length === 0) {
         console.log("chaine vide");
@@ -212,7 +207,7 @@ function validateName(value) {
  * @returns bool (true ou false) 
  */
 function validateAdress(value) {
-    const regex = /^[0-9][\sa-zA-Z]+$/;
+    const regex = /^[\sa-zA-Z0-9]+$/;
     if (value.length === 0) {
         console.log("chaine vide");
     }
